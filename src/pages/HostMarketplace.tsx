@@ -1,5 +1,4 @@
 
-import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { VENDOR_PACKAGES } from '../mockData/vendors';
 import { Star, Check } from 'lucide-react';
@@ -7,7 +6,7 @@ import { Star, Check } from 'lucide-react';
 const HostMarketplace = () => {
     const { category } = useParams<{ category: string }>();
     const navigate = useNavigate();
-    const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
+   // const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
 
     const filteredPackages = VENDOR_PACKAGES.filter(p => p.category === category || (category === 'event' && p.category === 'wedding')); // Mock filtering
 

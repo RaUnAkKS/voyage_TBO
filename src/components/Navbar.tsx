@@ -1,11 +1,9 @@
-
-import { MessageSquare, User, MapPin, Search, Calendar, Menu, X, LogIn } from 'lucide-react';
+import { MapPin, Search, Menu, X, LogIn } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const navigate = useNavigate();
 
   return (
     <nav className="navbar">

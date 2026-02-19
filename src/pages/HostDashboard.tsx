@@ -1,5 +1,4 @@
 
-import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Users, Clock, CheckSquare, Settings, LogOut, LayoutDashboard, Share2, Plus, Calendar } from 'lucide-react';
 

@@ -1,5 +1,5 @@
 
-import React from 'react';
+
 import { useParams, Link } from 'react-router-dom';
 import { User, Calendar } from 'lucide-react';
 
