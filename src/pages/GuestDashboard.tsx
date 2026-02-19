@@ -1,11 +1,6 @@
-
-import { useSearchParams } from 'react-router-dom';
 import { Calendar, MapPin, Clock } from 'lucide-react';
 
 const GuestDashboard = () => {
-    const [searchParams] = useSearchParams();
-   // const code = searchParams.get('code');
-
     return (
         <div className="container" style={{ padding: '2rem' }}>
             {/* Header Banner */}
