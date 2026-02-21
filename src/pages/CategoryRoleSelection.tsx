@@ -1,5 +1,3 @@
-
-
 import { useParams, Link } from 'react-router-dom';
 import { User, Calendar } from 'lucide-react';
 
@@ -17,7 +15,8 @@ const CategoryRoleSelection = () => {
                 </p>
 
                 <div className="role-cards">
-                    <Link to={`/host/marketplace/${category}`} className="role-card">
+                    {/* UPDATED: This now points to the questionnaire instead of the marketplace */}
+                    <Link to={`/host/questionnaire/${category}`} className="role-card">
                         <div className="icon-wrapper host-icon">
                             <Calendar size={48} />
                         </div>
