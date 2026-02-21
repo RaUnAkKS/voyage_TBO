@@ -6,54 +6,114 @@ import { Star, Check } from 'lucide-react';
 const HostMarketplace = () => {
     const { category } = useParams<{ category: string }>();
     const navigate = useNavigate();
-   // const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
 
-    const filteredPackages = VENDOR_PACKAGES.filter(p => p.category === category || (category === 'event' && p.category === 'wedding')); // Mock filtering
+    // URL param may be plural ('events', 'conferences', 'meetings') while
+    // VENDOR_PACKAGES uses singular keys ('event', 'conference', 'meeting')
+    const categoryMap: Record<string, string> = {
+        weddings: 'wedding', wedding: 'wedding',
+        events: 'event', event: 'event',
+        conferences: 'conference', conference: 'conference',
+        meetings: 'meeting', meeting: 'meeting',
+    };
+    const normalisedCat = categoryMap[category ?? ''] ?? category ?? '';
+    const filteredPackages = VENDOR_PACKAGES.filter(p => p.category === normalisedCat);
 
     const handleSelect = (pkgId: string) => {
         navigate(`/payment/${pkgId}`);
     };
 
+    const displayName = category
+        ? category.charAt(0).toUpperCase() + category.slice(1)
+        : 'Event';
+
     return (
-        <div className="container" style={{ padding: '2rem 1.5rem' }}>
-            <h1 style={{ marginBottom: '0.5rem', textTransform: 'capitalize' }}>Find {category} Packages</h1>
-            <p style={{ marginBottom: '2rem', color: 'var(--text-secondary)' }}>Select a package to start planning your event.</p>
+        <div style={{ background: '#121212', minHeight: '100vh', paddingBottom: '4rem' }}>
+            {/* Page Header */}
+            <div style={{
+                background: '#1A1A1D',
+                borderBottom: '1px solid rgba(255,255,255,0.06)',
+                padding: '3rem 0 2.5rem',
+                marginBottom: '2.5rem',
+            }}>
+                <div className="container">
+                    <p style={{
+                        fontSize: '0.72rem',
+                        fontWeight: 700,
+                        letterSpacing: '2px',
+                        textTransform: 'uppercase',
+                        color: '#C6A75E',
+                        marginBottom: '0.5rem',
+                    }}>
+                        Designed Packages
+                    </p>
+                    <h1 style={{
+                        fontFamily: 'var(--font-family-serif)',
+                        fontSize: 'clamp(1.75rem, 3vw, 2.5rem)',
+                        fontWeight: 600,
+                        color: '#FFFFFF',
+                        letterSpacing: '-0.3px',
+                        marginBottom: '0.5rem',
+                    }}>
+                        {displayName} Packages
+                    </h1>
+                    <p style={{ color: '#B5B5B5', fontSize: '0.95rem' }}>
+                        Select a curated package to start planning your event.
+                    </p>
+                </div>
+            </div>
 
-            <div className="marketplace-grid">
-                {filteredPackages.map((pkg) => (
-                    <div key={pkg.id} className="vendor-card">
-                        <div className="vendor-img" style={{ backgroundImage: `url(${pkg.image})` }}>
-                            <div className="badge">{pkg.category}</div>
-                        </div>
-                        <div className="vendor-content">
-                            <div className="flex justify-between items-center mb-2">
-                                <h3 className="vendor-title">{pkg.name}</h3>
-                                <div className="rating flex items-center gap-1">
-                                    <Star size={14} fill="#FFD700" color="#FFD700" />
-                                    <span>{pkg.rating}</span>
-                                </div>
+            <div className="container">
+                <div className="marketplace-grid">
+                    {filteredPackages.length === 0 && (
+                        <p style={{ color: '#B5B5B5', gridColumn: '1 / -1', padding: '2rem 0' }}>
+                            No packages available for this category yet.
+                        </p>
+                    )}
+                    {filteredPackages.map((pkg) => (
+                        <div key={pkg.id} className="vendor-card">
+                            {/* Image */}
+                            <div className="vendor-img-wrap">
+                                <div
+                                    className="vendor-img"
+                                    style={{ backgroundImage: `url(${pkg.image})` }}
+                                />
+                                <span className="vendor-badge">{pkg.category}</span>
                             </div>
-                            <p className="description">{pkg.description}</p>
 
-                            <div className="services-list">
-                                {pkg.services.map((service, idx) => (
-                                    <div key={idx} className="service-item">
-                                        <Check size={12} className="text-primary" /> {service}
+                            {/* Content */}
+                            <div className="vendor-content">
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.65rem' }}>
+                                    <h3 className="vendor-title">{pkg.name}</h3>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', flexShrink: 0 }}>
+                                        <Star size={13} fill="#C6A75E" color="#C6A75E" />
+                                        <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#B5B5B5' }}>{pkg.rating}</span>
                                     </div>
-                                ))}
+                                </div>
+
+                                <p className="vendor-description">{pkg.description}</p>
+
+                                <div className="services-list">
+                                    {pkg.services.map((service, idx) => (
+                                        <div key={idx} className="service-item">
+                                            <Check size={11} color="#C6A75E" strokeWidth={3} />
+                                            {service}
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="vendor-price">${pkg.price.toLocaleString()}</div>
+
+                                <button
+                                    className="btn btn-primary"
+                                    style={{ width: '100%', justifyContent: 'center', marginTop: '0.25rem' }}
+                                    onClick={() => handleSelect(pkg.id)}
+                                >
+                                    Select Package
+                                </button>
                             </div>
-
-                            <div className="price-tag">${pkg.price.toLocaleString()}</div>
-
-                            <button
-                                className="btn btn-primary w-full"
-                                onClick={() => handleSelect(pkg.id)}
-                            >
-                                Select Package
-                            </button>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
 
             <style>{`
@@ -63,68 +123,88 @@ const HostMarketplace = () => {
                     gap: 2rem;
                 }
                 .vendor-card {
-                    background: white;
-                    border: 1px solid var(--border-color);
-                    border-radius: 8px;
+                    background: #1E1E1E;
+                    border: 1px solid rgba(255,255,255,0.06);
+                    border-radius: 12px;
                     overflow: hidden;
-                    transition: transform 0.2s;
+                    transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+                    box-shadow: 0 4px 16px rgba(0,0,0,0.5);
                 }
                 .vendor-card:hover {
-                    box-shadow: var(--shadow-lg);
-                    transform: translateY(-2px);
+                    transform: translateY(-4px);
+                    box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(198,167,94,0.45);
+                    border-color: rgba(198,167,94,0.45);
                 }
-                .vendor-img {
-                    height: 200px;
-                    background-size: cover;
-                    background-position: center;
+                .vendor-img-wrap {
+                    height: 240px;
+                    overflow: hidden;
                     position: relative;
                 }
-                .badge {
+                .vendor-img {
+                    width: 100%;
+                    height: 100%;
+                    background-size: cover;
+                    background-position: center;
+                    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.5s ease;
+                }
+                .vendor-card:hover .vendor-img {
+                    transform: scale(1.06);
+                    filter: brightness(1.08) saturate(1.1);
+                }
+                .vendor-badge {
                     position: absolute;
-                    top: 1rem;
-                    right: 1rem;
-                    background: white;
-                    padding: 0.25rem 0.75rem;
-                    border-radius: 20px;
-                    font-size: 0.75rem;
+                    top: 12px;
+                    left: 12px;
+                    background: rgba(10,10,10,0.75);
+                    backdrop-filter: blur(6px);
+                    color: #C6A75E;
+                    font-size: 0.68rem;
                     font-weight: 700;
+                    letter-spacing: 1.2px;
                     text-transform: uppercase;
+                    padding: 0.25rem 0.65rem;
+                    border-radius: 20px;
+                    border: 1px solid rgba(198,167,94,0.35);
                 }
-                .vendor-content {
-                    padding: 1.5rem;
-                }
+                .vendor-content { padding: 1.5rem; }
                 .vendor-title {
-                    font-size: 1.25rem;
-                    font-weight: 700;
+                    font-family: var(--font-family-serif);
+                    font-size: 1.15rem;
+                    font-weight: 600;
+                    color: #FFFFFF;
+                    line-height: 1.3;
+                    flex: 1;
                 }
-                .mb-2 { margin-bottom: 0.5rem; }
-                .description {
-                    font-size: 0.9rem;
-                    color: var(--text-secondary);
+                .vendor-description {
+                    font-size: 0.875rem;
+                    color: #B5B5B5;
+                    line-height: 1.55;
                     margin-bottom: 1rem;
                     display: -webkit-box;
                     -webkit-line-clamp: 2;
                     -webkit-box-orient: vertical;
                     overflow: hidden;
                 }
-                .services-list {
-                    margin-bottom: 1.5rem;
-                }
+                .services-list { margin-bottom: 1.25rem; }
                 .service-item {
-                    font-size: 0.85rem;
+                    font-size: 0.82rem;
                     display: flex;
                     align-items: center;
-                    gap: 0.5rem;
-                    margin-bottom: 0.25rem;
-                    color: var(--text-secondary);
+                    gap: 0.45rem;
+                    margin-bottom: 0.3rem;
+                    color: #B5B5B5;
                 }
-                .price-tag {
-                    font-size: 1.5rem;
+                .vendor-price {
+                    font-family: var(--font-family-serif);
+                    font-size: 1.6rem;
                     font-weight: 700;
-                    color: var(--text-primary);
+                    color: #C6A75E;
                     margin-bottom: 1rem;
+                    letter-spacing: -0.5px;
                 }
-                .w-full { width: 100%; }
+                @media (max-width: 640px) {
+                    .marketplace-grid { grid-template-columns: 1fr; }
+                }
             `}</style>
         </div>
     );

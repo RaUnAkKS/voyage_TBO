@@ -1,0 +1,687 @@
+/* ─── Host Event Form — Charcoal Black + Bronze Gold (Premium) ─── */
+
+/* ========== Design Tokens ========== */
+:root {
+    --ef-bg: #121212;
+    --ef-card: #1A1A1D;
+    --ef-card-deep: #181818;
+    --ef-surface: #1E1E1E;
+    --ef-border: rgba(255, 255, 255, 0.07);
+    --ef-border-focus: #C6A75E;
+    --ef-text: #F5F5F5;
+    --ef-muted: #B5B5B5;
+    --ef-hint: #727272;
+    --ef-gold: #C6A75E;
+    --ef-gold-hover: #D4B76A;
+    --ef-gold-bg: rgba(198, 167, 94, 0.12);
+    --ef-gold-glow: rgba(198, 167, 94, 0.2);
+    --ef-err: #E05C5C;
+    --ef-radius: 8px;
+    --ef-radius-sm: 6px;
+    --ef-shadow: 0 4px 32px rgba(0, 0, 0, 0.6);
+    --ef-font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --ef-serif: 'Playfair Display', Georgia, serif;
+    --ef-gap: 1.75rem;
+}
+
+/* ========== Page ========== */
+html,
+body {
+    background-color: #121212;
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+#root {
+    background-color: #121212;
+    min-height: 100vh;
+}
+
+.ef-page {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #121212 0%, #181818 100%);
+    padding: 3.5rem 1.25rem 6rem;
+}
+
+/* ========== Container ========== */
+.ef-container {
+    max-width: 880px;
+    margin: 0 auto;
+}
+
+/* ========== Header ========== */
+.ef-head {
+    margin-bottom: 2.5rem;
+}
+
+.ef-cat {
+    font-family: var(--ef-font);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--ef-gold);
+    margin-bottom: 0.6rem;
+    display: block;
+}
+
+.ef-h1 {
+    font-family: var(--ef-serif);
+    font-size: clamp(1.75rem, 4vw, 2.6rem);
+    font-weight: 400;
+    color: var(--ef-text);
+    letter-spacing: -0.3px;
+    margin-bottom: 0.5rem;
+    line-height: 1.25;
+}
+
+.ef-sub {
+    font-family: var(--ef-font);
+    font-size: 0.93rem;
+    color: var(--ef-muted);
+    line-height: 1.6;
+}
+
+/* ========== Main Card ========== */
+.ef-card {
+    background: var(--ef-card);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 3rem 3.25rem;
+    box-shadow: var(--ef-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: var(--ef-gap);
+}
+
+/* ========== Field ========== */
+.ef-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+/* ========== Label ========== */
+.ef-label {
+    font-family: var(--ef-font);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--ef-muted);
+}
+
+/* ========== Input ========== */
+.ef-input {
+    width: 100%;
+    height: 48px;
+    padding: 0 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--ef-radius-sm);
+    font-family: var(--ef-font);
+    font-size: 0.93rem;
+    color: var(--ef-text);
+    background: #1A1A1A;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    box-sizing: border-box;
+}
+
+.ef-input:focus {
+    border-color: var(--ef-border-focus);
+    box-shadow: 0 0 0 3px rgba(198, 167, 94, 0.1);
+}
+
+.ef-input::placeholder {
+    color: #4A4A4A;
+}
+
+.ef-input--err {
+    border-color: var(--ef-err);
+}
+
+/* Date input color fix */
+.ef-input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.5);
+    cursor: pointer;
+}
+
+/* ========== Select ========== */
+.ef-sel-wrap {
+    position: relative;
+}
+
+.ef-sel {
+    width: 100%;
+    height: 48px;
+    padding: 0 2.5rem 0 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--ef-radius-sm);
+    font-family: var(--ef-font);
+    font-size: 0.93rem;
+    color: var(--ef-text);
+    background: #1A1A1A;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.ef-sel:focus {
+    border-color: var(--ef-border-focus);
+    box-shadow: 0 0 0 3px rgba(198, 167, 94, 0.1);
+}
+
+.ef-sel--err {
+    border-color: var(--ef-err);
+}
+
+.ef-sel-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ef-hint);
+    pointer-events: none;
+}
+
+/* Fix native select option bg */
+.ef-sel option {
+    background: #1E1E1E;
+    color: var(--ef-text);
+}
+
+/* ========== Two-column row ========== */
+.ef-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--ef-gap);
+}
+
+/* ========== Hint / Error ========== */
+.ef-hint {
+    font-size: 0.75rem;
+    color: var(--ef-hint);
+}
+
+.ef-err {
+    font-size: 0.75rem;
+    color: var(--ef-err);
+}
+
+.ef-per-guest {
+    font-size: 0.78rem;
+    color: var(--ef-gold);
+    font-weight: 600;
+    margin-top: 0.2rem;
+}
+
+/* ========== Divider ========== */
+.ef-divider-line {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    margin: 0.25rem 0;
+}
+
+/* ========== Pills (Bride/Groom) ========== */
+.ef-pills {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.ef-pill {
+    padding: 0.6rem 1.5rem;
+    border: 1px solid rgba(198, 167, 94, 0.25);
+    border-radius: 100px;
+    background: transparent;
+    font-family: var(--ef-font);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ef-muted);
+    cursor: pointer;
+    transition: border-color 0.22s, color 0.22s, background 0.22s, transform 0.18s;
+}
+
+.ef-pill:hover {
+    border-color: rgba(198, 167, 94, 0.6);
+    color: var(--ef-text);
+    transform: translateY(-1px);
+    background: rgba(198, 167, 94, 0.06);
+}
+
+.ef-pill--on {
+    border-color: var(--ef-gold);
+    background: rgba(198, 167, 94, 0.15);
+    color: var(--ef-gold);
+    font-weight: 600;
+    box-shadow: 0 0 12px rgba(198, 167, 94, 0.18);
+}
+
+/* ========== Chips (Theme/Customisation) ========== */
+.ef-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+}
+
+.ef-chip {
+    padding: 0.42rem 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.03);
+    font-family: var(--ef-font);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--ef-muted);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.15s;
+}
+
+.ef-chip:hover {
+    border-color: rgba(198, 167, 94, 0.55);
+    color: var(--ef-gold);
+    background: rgba(198, 167, 94, 0.06);
+    transform: translateY(-1px);
+}
+
+.ef-chip--on {
+    border-color: var(--ef-gold);
+    background: rgba(198, 167, 94, 0.14);
+    color: var(--ef-gold);
+    font-weight: 600;
+}
+
+/* ========== Destination Grid — Premium Pills ========== */
+.ef-dest {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+}
+
+.ef-dest-btn {
+    padding: 0.9rem 0.6rem;
+    border: 1px solid rgba(198, 167, 94, 0.2);
+    border-radius: var(--ef-radius);
+    background: rgba(255, 255, 255, 0.025);
+    font-family: var(--ef-font);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--ef-muted);
+    cursor: pointer;
+    text-align: center;
+    line-height: 1.4;
+    transition: all 0.28s ease;
+}
+
+.ef-dest-btn:hover {
+    border-color: rgba(198, 167, 94, 0.6);
+    color: var(--ef-text);
+    background: rgba(198, 167, 94, 0.07);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.ef-dest-btn--on {
+    border-color: var(--ef-gold);
+    background: rgba(198, 167, 94, 0.16);
+    color: var(--ef-gold);
+    font-weight: 600;
+    box-shadow: 0 0 16px rgba(198, 167, 94, 0.18);
+}
+
+/* ========== Package / Plan Option Cards ========== */
+.ef-pkg {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 1.75rem 1.5rem;
+    border: 1px solid rgba(198, 167, 94, 0.18);
+    border-radius: var(--ef-radius);
+    background: #181818;
+    cursor: pointer;
+    font-family: var(--ef-font);
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.25s, background 0.25s, box-shadow 0.25s, transform 0.22s;
+    width: 100%;
+}
+
+/* Bronze accent top line */
+.ef-pkg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(198, 167, 94, 0.2), transparent);
+    transition: background 0.25s;
+}
+
+.ef-pkg:hover {
+    border-color: rgba(198, 167, 94, 0.5);
+    background: #1E1E1E;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(198, 167, 94, 0.15);
+}
+
+.ef-pkg:hover::before {
+    background: linear-gradient(90deg, transparent, rgba(198, 167, 94, 0.55), transparent);
+}
+
+.ef-pkg strong {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ef-text);
+    letter-spacing: 0.2px;
+}
+
+.ef-pkg span {
+    font-size: 0.82rem;
+    color: var(--ef-hint);
+    line-height: 1.55;
+}
+
+.ef-pkg--on {
+    border-color: var(--ef-gold);
+    background: rgba(198, 167, 94, 0.07);
+    box-shadow: 0 0 0 1px rgba(198, 167, 94, 0.3), 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+
+.ef-pkg--on::before {
+    background: linear-gradient(90deg, transparent, var(--ef-gold), transparent);
+}
+
+.ef-pkg--on strong {
+    color: var(--ef-gold);
+}
+
+.ef-pkg--on span {
+    color: var(--ef-muted);
+}
+
+/* ========== Submit / Continue ========== */
+.ef-submit-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.75rem;
+}
+
+.ef-submit {
+    padding: 1rem 3.5rem;
+    border: none;
+    border-radius: var(--ef-radius);
+    font-family: var(--ef-font);
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--ef-hint);
+    cursor: not-allowed;
+    transition: all 0.28s ease;
+    min-width: 220px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.ef-submit--on {
+    background: var(--ef-gold);
+    color: #0A0A0A;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(198, 167, 94, 0.25);
+}
+
+.ef-submit--on:hover {
+    background: var(--ef-gold-hover);
+    box-shadow: 0 8px 32px rgba(198, 167, 94, 0.38);
+    transform: translateY(-3px);
+    color: #0A0A0A;
+}
+
+.ef-submit--on:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(198, 167, 94, 0.25);
+}
+
+.ef-submit-hint {
+    font-size: 0.75rem;
+    color: var(--ef-err);
+    text-align: center;
+}
+
+/* ========== Multi-Select ========== */
+.ef-ms {
+    position: relative;
+}
+
+.ef-ms-box {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0.4rem 0.75rem 0.4rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--ef-radius-sm);
+    background: #1A1A1A;
+    cursor: pointer;
+    gap: 6px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.ef-ms-box:hover,
+.ef-ms-box--open {
+    border-color: var(--ef-border-focus);
+    box-shadow: 0 0 0 3px rgba(198, 167, 94, 0.1);
+}
+
+.ef-ms--err .ef-ms-box {
+    border-color: var(--ef-err);
+}
+
+.ef-ms-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    flex: 1;
+    align-items: center;
+}
+
+.ef-ms-ph {
+    font-size: 0.93rem;
+    color: #4A4A4A;
+}
+
+.ef-ms-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0.22rem 0.6rem;
+    border-radius: 4px;
+    background: rgba(198, 167, 94, 0.15);
+    border: 1px solid rgba(198, 167, 94, 0.3);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ef-gold);
+}
+
+.ef-ms-tag button {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ef-hint);
+    padding: 0;
+    transition: color 0.15s;
+}
+
+.ef-ms-tag button:hover {
+    color: var(--ef-err);
+}
+
+.ef-ms-chevron {
+    color: var(--ef-hint);
+    flex-shrink: 0;
+    margin-left: auto;
+    transition: transform 0.2s;
+}
+
+.ef-ms-chevron--open {
+    transform: rotate(180deg);
+}
+
+.ef-ms-drop {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background: #1E1E1E;
+    border: 1px solid rgba(198, 167, 94, 0.2);
+    border-radius: var(--ef-radius-sm);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    animation: ef-drop 0.15s ease;
+}
+
+@keyframes ef-drop {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ef-ms-search {
+    display: block;
+    width: 100%;
+    padding: 0.65rem 1rem;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    font-family: var(--ef-font);
+    font-size: 0.85rem;
+    color: var(--ef-text);
+    background: #252525;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.ef-ms-search::placeholder {
+    color: #4A4A4A;
+}
+
+.ef-ms-drop ul {
+    list-style: none;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 0.3rem 0;
+    margin: 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.ef-ms-drop ul::-webkit-scrollbar {
+    width: 4px;
+}
+
+.ef-ms-drop ul::-webkit-scrollbar-thumb {
+    background: rgba(198, 167, 94, 0.25);
+    border-radius: 2px;
+}
+
+.ef-ms-empty {
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    color: var(--ef-hint);
+    text-align: center;
+}
+
+.ef-ms-opt {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1rem;
+    font-size: 0.88rem;
+    color: var(--ef-text);
+    cursor: pointer;
+    transition: background 0.15s;
+    user-select: none;
+}
+
+.ef-ms-opt:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.ef-ms-opt--sel {
+    background: rgba(198, 167, 94, 0.08);
+}
+
+.ef-ms-cb {
+    width: 16px;
+    height: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--ef-bg);
+    transition: all 0.15s;
+}
+
+.ef-ms-cb--on {
+    background: var(--ef-gold);
+    border-color: var(--ef-gold);
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 720px) {
+    .ef-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .ef-row {
+        grid-template-columns: 1fr;
+    }
+
+    .ef-dest {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .ef-card {
+        padding: 1.5rem 1.1rem;
+        border-radius: 12px;
+    }
+
+    .ef-dest {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ef-head {
+        margin-bottom: 1.75rem;
+    }
+
+    .ef-submit {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .ef-submit-row {
+        align-items: stretch;
+    }
+}
