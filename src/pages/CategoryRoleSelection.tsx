@@ -1,5 +1,3 @@
-
-
 import { useParams, Link } from 'react-router-dom';
 import { User, Calendar } from 'lucide-react';
 
@@ -17,17 +15,15 @@ const CategoryRoleSelection = () => {
           Select your journey. How are you attending this event?
         </p>
 
-        <div className="role-cards">
-          <Link to={`/host/create-event?category=${category}`} className="role-card">
-            <div className="role-icon-outer">
-              <div className="role-icon-inner">
-                <Calendar size={32} strokeWidth={2.5} />
-              </div>
-            </div>
-            <h2 className="role-card-title">I am a Host</h2>
-            <p className="role-card-desc">I want to plan, manage, and book premium vendors for my {category}.</p>
-            <div className="role-card-cta">Start Planning →</div>
-          </Link>
+                <div className="role-cards">
+                    {/* UPDATED: This now points to the questionnaire instead of the marketplace */}
+                    <Link to={`/host/questionnaire/${category}`} className="role-card">
+                        <div className="icon-wrapper host-icon">
+                            <Calendar size={48} />
+                        </div>
+                        <h2>I am a Host</h2>
+                        <p>I want to plan and book vendors for my {category}.</p>
+                    </Link>
 
           <Link to="/guest" className="role-card">
             <div className="role-icon-outer">
