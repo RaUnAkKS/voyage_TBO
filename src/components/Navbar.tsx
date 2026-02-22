@@ -56,18 +56,18 @@ export default function Navbar() {
 
       <style>{`
         .navbar {
-          background: var(--background-white); /* Clean white */
+          background: var(--background-white); /* Now pulls #1A1A1D from index.css */
           border-bottom: 1px solid var(--border-color);
           position: sticky;
           top: 0;
           z-index: 100;
-          box-shadow: var(--shadow-sm); /* Subtle depth */
+          box-shadow: var(--shadow-sm);
         }
         .nav-container {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          height: 80px; /* Slightly taller for luxury feel */
+          height: 80px;
         }
         .nav-left {
           display: flex;
@@ -76,7 +76,7 @@ export default function Navbar() {
           flex: 1;
         }
         .logo {
-          font-family: var(--font-family-serif); /* Serif Logo */
+          font-family: var(--font-family-serif);
           font-size: 1.75rem;
           font-weight: 700;
           color: var(--primary-color);
@@ -84,9 +84,9 @@ export default function Navbar() {
           text-transform: uppercase;
         }
         .search-bar {
-          background: var(--background-light);
+          background: var(--background-light); /* Now pulls #121212 */
           border: 1px solid var(--border-color);
-          border-radius: 4px; /* More structured, less round */
+          border-radius: 4px;
           padding: 0.6rem 1rem;
           display: flex;
           align-items: center;
@@ -136,14 +136,14 @@ export default function Navbar() {
         
         .category-strip {
           border-top: 1px solid var(--border-color);
-          background: white; /* Keep strip clean */
+          background: var(--background-white); /* Changed from 'white' to dark variable */
           padding: 1rem 0;
           overflow-x: auto;
         }
         .category-strip .container {
           display: flex;
-          gap: 3rem; /* More spacing */
-          justify-content: center; /* Center categories */
+          gap: 3rem;
+          justify-content: center;
         }
         .category-item {
           font-weight: 500;
@@ -183,7 +183,7 @@ export default function Navbar() {
             top: 80px;
             left: 0;
             width: 100%;
-            background: white;
+            background: var(--background-white); /* Dark background for mobile */
             border-bottom: 1px solid var(--border-color);
             padding: 1.5rem;
             display: flex;
@@ -191,6 +191,7 @@ export default function Navbar() {
             gap: 1.5rem;
             box-shadow: var(--shadow-lg);
           }
+          .mobile-link { color: var(--text-primary); }
           .icon-btn {
               background: none;
               border: none;
