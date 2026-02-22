@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ChevronDown, X, Check } from 'lucide-react';
 import '../styles/HostEventForm.css';
 
@@ -144,10 +144,13 @@ const Select = ({ id, value, onChange, children, error }: {
 // ── MAIN PAGE ────────────────────────────────────────────────────────────────
 type Pkg = 'custom' | 'designed' | null;
 
-const HostEventForm = () => {
+const HostQuestionnaire = () => {
     const navigate = useNavigate();
-    const [sp] = useSearchParams();
-    const cat = normalise((sp.get('category') || '').toLowerCase());
+    
+    // SAFETY NET 1: Ensure we grab category via useParams, and provide a strict fallback.
+    const { category } = useParams<{ category: string }>();
+    const cat = normalise((category || 'wedding').toLowerCase());
+    
     const isWedding = cat === 'wedding';
     const heading = CATEGORY_HEADINGS[cat] ?? DEFAULT_H;
     const typeOptions = EVENT_TYPES[cat] ?? EVENT_TYPES['wedding'];
@@ -181,7 +184,20 @@ const HostEventForm = () => {
     const submit = () => {
         setTried(true);
         if (!valid) return;
-        navigate(pkg === 'custom' ? '/host/customize' : `/host/marketplace/${cat}`);
+
+        // Bundle up all the user's answers
+        const formData = {
+            category: cat, types, location, budget, start, end, guests, rooms, who, themes, dest, pkg
+        };
+
+        // SAFETY NET 2: Never allow a blank category when navigating to the marketplace
+        const safeCategory = cat || 'wedding';
+
+        if (pkg === 'custom') {
+            navigate('/host/customize', { state: { formData } });
+        } else {
+            navigate(`/host/marketplace/${safeCategory}`, { state: { formData } });
+        }
     };
 
     const perGuest = budgetPerGuest(budget, guests);
@@ -337,4 +353,4 @@ const HostEventForm = () => {
     );
 };
 
-export default HostEventForm;
+export default HostQuestionnaire;

@@ -1,0 +1,343 @@
+/* ─── Host Customize — Charcoal Black + Bronze Gold (Premium) ─── */
+
+/* ========== Design Tokens ========== */
+:root {
+    --ef-bg: #121212;
+    --ef-card: #1A1A1D;
+    --ef-surface: #1E1E1E;
+    --ef-border: rgba(255, 255, 255, 0.07);
+    --ef-border-focus: #C6A75E;
+    --ef-text: #F5F5F5;
+    --ef-muted: #B5B5B5;
+    --ef-hint: #727272;
+    --ef-gold: #C6A75E;
+    --ef-gold-hover: #D4B76A;
+    --ef-gold-bg: rgba(198, 167, 94, 0.12);
+    --ef-err: #E05C5C;
+    --ef-radius: 8px;
+    --ef-radius-sm: 6px;
+    --ef-shadow: 0 4px 32px rgba(0, 0, 0, 0.6);
+    --ef-font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --ef-serif: 'Playfair Display', Georgia, serif;
+}
+
+/* ========== Container ========== */
+.custom-builder-container {
+    background-color: var(--ef-bg);
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 120px; /* Space for sticky cart */
+    font-family: var(--ef-font);
+    color: var(--ef-text);
+}
+
+/* ========== Header ========== */
+.builder-header {
+    text-align: center;
+    padding-top: 3rem;
+    margin-bottom: 3.5rem;
+}
+
+.builder-header h1 {
+    font-family: var(--ef-serif);
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 400;
+    color: var(--ef-text);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.3px;
+}
+
+.subtitle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    color: var(--ef-muted);
+    font-size: 1.05rem;
+}
+
+.subtitle strong {
+    color: var(--ef-gold);
+    font-weight: 600;
+}
+
+/* ========== Sections ========== */
+.section-title {
+    font-family: var(--ef-serif);
+    font-size: 1.75rem;
+    font-weight: 400;
+    color: var(--ef-text);
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+/* ========== Vendor Cards ========== */
+.vendor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.vendor-card {
+    background: var(--ef-card);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.vendor-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--ef-shadow);
+    border-color: rgba(198, 167, 94, 0.3);
+}
+
+.vendor-card.selected {
+    border: 1px solid var(--ef-gold);
+    box-shadow: 0 0 16px rgba(198, 167, 94, 0.15);
+    background: #1E1E1E;
+}
+
+.vendor-img {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+}
+
+/* Subtle bronze gradient overlay on images */
+.vendor-img::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 50%;
+    background: linear-gradient(to top, rgba(26, 26, 29, 0.9), transparent);
+}
+
+.vendor-info {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.vendor-info h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--ef-text);
+    letter-spacing: 0.2px;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ef-text);
+}
+
+.price {
+    font-weight: 700;
+    color: var(--ef-gold);
+    font-size: 1.35rem;
+    margin: 0.5rem 0 1.5rem 0;
+}
+
+/* ========== Add/Remove Buttons ========== */
+.btn-toggle {
+    width: 100%;
+    padding: 0.85rem;
+    border-radius: var(--ef-radius-sm);
+    font-family: var(--ef-font);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: none;
+    margin-top: auto;
+}
+
+/* "Add" Button (Matches your Pill/Chip style) */
+.btn-toggle.add {
+    background: transparent;
+    border: 1px solid rgba(198, 167, 94, 0.3);
+    color: var(--ef-muted);
+}
+
+.btn-toggle.add:hover {
+    border-color: rgba(198, 167, 94, 0.7);
+    color: var(--ef-gold);
+    background: rgba(198, 167, 94, 0.08);
+}
+
+/* "Remove/Added" Button (Matches your Active state) */
+.btn-toggle.remove {
+    background: rgba(198, 167, 94, 0.15);
+    border: 1px solid var(--ef-gold);
+    color: var(--ef-gold);
+    box-shadow: 0 0 12px rgba(198, 167, 94, 0.12);
+}
+
+.btn-toggle.remove:hover {
+    background: rgba(198, 167, 94, 0.25);
+}
+
+/* ========== Sticky Bottom Cart Bar ========== */
+.sticky-cart-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(26, 26, 29, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 -4px 30px rgba(0,0,0,0.8);
+    padding: 1.25rem 0;
+    z-index: 100;
+    border-top: 1px solid rgba(198, 167, 94, 0.2);
+    animation: slideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+.cart-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.cart-details {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.cart-icon-wrapper {
+    position: relative;
+    color: var(--ef-gold);
+    background: rgba(198, 167, 94, 0.1);
+    padding: 0.75rem;
+    border-radius: 50%;
+    border: 1px solid rgba(198, 167, 94, 0.2);
+}
+
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--ef-gold);
+    color: #0A0A0A;
+    font-size: 0.75rem;
+    font-weight: 800;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 4px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+.total-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.total-label {
+    font-size: 0.75rem;
+    color: var(--ef-muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.2rem;
+}
+
+.total-amount {
+    font-size: 1.8rem;
+    font-weight: 400;
+    font-family: var(--ef-serif);
+    color: var(--ef-text);
+    line-height: 1;
+}
+
+/* ========== Checkout Button ========== */
+/* Matches the .ef-submit--on style perfectly */
+.sticky-cart-bar .btn-primary {
+    padding: 1rem 3.5rem;
+    border: none;
+    border-radius: var(--ef-radius);
+    font-family: var(--ef-font);
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background: var(--ef-gold);
+    color: #0A0A0A;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(198, 167, 94, 0.25);
+    transition: all 0.28s ease;
+}
+
+.sticky-cart-bar .btn-primary:hover:not(:disabled) {
+    background: var(--ef-gold-hover);
+    box-shadow: 0 8px 32px rgba(198, 167, 94, 0.38);
+    transform: translateY(-2px);
+}
+
+.sticky-cart-bar .btn-primary:disabled {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--ef-hint);
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+/* ========== Layout Utilities ========== */
+.flex { display: flex; }
+.justify-between { justify-content: space-between; }
+.items-start { align-items: flex-start; }
+
+/* ========== Responsive Design ========== */
+@media (max-width: 768px) {
+    .cart-content {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .cart-details {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .sticky-cart-bar .btn-primary {
+        width: 100%;
+    }
+
+    .builder-header h1 {
+        font-size: 2rem;
+    }
+    
+    .sticky-cart-bar {
+        padding: 1rem 0 1.5rem;
+    }
+}

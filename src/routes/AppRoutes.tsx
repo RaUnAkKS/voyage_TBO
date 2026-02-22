@@ -10,7 +10,8 @@ import GuestDashboard from '../pages/GuestDashboard';
 
 // Import the new components we created
 import Auth from '../components/Auth';
-import HostQuestionnaire from '../pages/HostQuestionnaire'; // NEW: Import the questionnaire
+import HostQuestionnaire from '../pages/HostQuestionnaire'; 
+import HostCustomize from '../pages/HostCustomize'; // NEW: Import the custom builder
 
 const AppRoutes = () => {
     return (
@@ -27,7 +28,8 @@ const AppRoutes = () => {
                 <Route path="category/:category" element={<CategoryRoleSelection />} />
 
                 {/* Host Flow */}
-                <Route path="host/questionnaire/:category" element={<HostQuestionnaire />} /> {/* NEW: Added Questionnaire Route */}
+                <Route path="host/questionnaire/:category" element={<HostQuestionnaire />} />
+                <Route path="host/customize" element={<HostCustomize />} /> {/* NEW: Added Customize Route */}
                 <Route path="host/marketplace/:category" element={<HostMarketplace />} />
                 <Route path="payment/:packageId" element={<TokenPayment />} />
 
