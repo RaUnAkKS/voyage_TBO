@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, User as UserIcon, ArrowRight, AlertCircle, RefreshCw } from 'lucide-react';
 import '../styles/Auth.css';
+import { apiRequest } from '../lib/api';
+import { useAuth } from '../context/AuthContext';
 
 type AuthMode = 'login' | 'signup' | 'forgot-password';
 
@@ -21,6 +23,7 @@ const Auth: React.FC<AuthProps> = ({ initialMode = 'login' }) => {
   
   const navigate = useNavigate();
   const location = useLocation();
+  const { refreshUser } = useAuth();
 
   // Sync state with URL changes
   useEffect(() => {
@@ -73,20 +76,47 @@ const Auth: React.FC<AuthProps> = ({ initialMode = 'login' }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (validateForm()) {
-      if (view === 'forgot-password') {
-        console.log('Sending password reset link to:', formData.email);
-        // TODO: Trigger backend password reset logic here
-        alert('If an account exists, a reset link has been sent to your email.');
-        navigate('/login');
-      } else {
-        console.log(`${view === 'login' ? 'Logging in' : 'Signing up'} with:`, formData);
-        // TODO: Trigger login/signup logic here
+
+    if (!validateForm()) return;
+
+    try {
+      if (view === 'signup') {
+        await apiRequest('/auth/signup', {
+          method: 'POST',
+          body: JSON.stringify({
+            fullName: formData.name,
+            email: formData.email,
+            password: formData.password,
+          }),
+        });
+
+        await refreshUser();
         navigate('/');
       }
+
+      if (view === 'login') {
+        await apiRequest('/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+          }),
+        });
+        
+        console.log("refreshUser running");
+        await refreshUser();
+        navigate('/');
+        console.log("Calling refreshUser");
+      }
+
+      if (view === 'forgot-password') {
+        alert('Password reset not implemented yet.');
+      }
+
+    } catch (error: any) {
+      setErrors({ general: error.message });
     }
   };
 

@@ -3,6 +3,7 @@ import MainLayout from '../layouts/MainLayout';
 import Landing from '../pages/Landing';
 import CategoryRoleSelection from '../pages/CategoryRoleSelection';
 import HostMarketplace from '../pages/HostMarketplace';
+import HostEventForm from '../pages/HostEventForm';
 import TokenPayment from '../pages/TokenPayment';
 import HostDashboard from '../pages/HostDashboard';
 import GuestCodeEntry from '../pages/GuestCodeEntry';
@@ -28,6 +29,7 @@ const AppRoutes = () => {
                 <Route path="category/:category" element={<CategoryRoleSelection />} />
 
                 {/* Host Flow */}
+                <Route path="host/create-event" element={<HostEventForm />} />
                 <Route path="host/questionnaire/:category" element={<HostQuestionnaire />} />
                 <Route path="host/customize" element={<HostCustomize />} /> {/* NEW: Added Customize Route */}
                 <Route path="host/marketplace/:category" element={<HostMarketplace />} />

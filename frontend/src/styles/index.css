@@ -1,52 +1,90 @@
+/* ═══════════════════════════════════════
+   CHARCOAL BLACK + BRONZE GOLD — Global Tokens
+═══════════════════════════════════════ */
 :root {
-  /* ─── Charcoal Black + Bronze Gold (Premium Theme) ─── */
-  --primary-color: #C6A75E;        /* Bronze Gold */
-  --primary-hover: #D4B76A;        /* Lighter Gold Hover */
-  --secondary-color: #1A1A1D;      /* Secondary Dark Surface */
-  --accent-gold: #D4AF37;          /* Bright Accent Gold */
-  
-  --background-white: #1A1A1D;     /* Replaced White with Deep Card BG */
-  --background-light: #121212;     /* Replaced Cream with Charcoal/Black BG */
-  
-  --border-color: rgba(255, 255, 255, 0.08); /* Subtle Light Border */
-  --border-hover: rgba(198, 167, 94, 0.4);   /* Gold Border on Hover */
-  
-  --text-primary: #F5F5F5;         /* Off-White for high readability */
-  --text-secondary: #B5B5B5;       /* Muted Gray for descriptions */
-  --text-inverse: #0A0A0A;         /* Dark text for inside gold buttons */
-  
-  --success-color: #5F7D58;        /* Muted Green */
-  --error-color: #E05C5C;          /* Muted Red */
+  /* ── Backgrounds ── */
+  --bg-base: #121212;
+  /* deep charcoal */
+  --bg-section: #1A1A1D;
+  /* slightly lighter charcoal panel */
+  --bg-card: #1E1E1E;
+  /* elevated card surface */
+  --bg-card-hover: #252525;
+  /* card hover lift */
+  --bg-input: #1A1A1A;
+  /* input field bg */
 
-  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-family-serif: 'Playfair Display', 'Georgia', serif; /* Luxury Headings */
+  /* ── Accent / Brand ── */
+  --primary-color: #C6A75E;
+  /* bronze gold */
+  --primary-hover: #D4B76A;
+  /* soft bronze hover */
+  --primary-glow: rgba(198, 167, 94, 0.22);
+  --accent-gold: #C6A75E;
 
-  /* Dark Mode Shadows */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
-  --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(198, 167, 94, 0.2); /* Deep shadow + Gold Glow */
+  /* ── Text ── */
+  --text-primary: #F5F5F5;
+  --text-secondary: #B5B5B5;
+  --text-muted: #727272;
+
+  /* ── Borders ── */
+  --border-color: rgba(255, 255, 255, 0.07);
+  --border-gold: rgba(198, 167, 94, 0.3);
+  --border-gold-hover: rgba(198, 167, 94, 0.65);
+
+  /* ── Legacy aliases ── */
+  --background-white: var(--bg-card);
+  --background-light: var(--bg-section);
+  --secondary-color: #F5F5F5;
+  --light-taupe: var(--bg-card);
+  --success-color: #4CAF85;
+  --error-color: #E05C5C;
+
+  /* ── Typography ── */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-family-serif: 'Playfair Display', 'Georgia', serif;
+
+  /* ── Shadows ── */
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.65);
+  --shadow-card: 0 0 0 1px var(--border-gold), 0 8px 28px rgba(0, 0, 0, 0.5);
+  --shadow-gold: 0 0 18px var(--primary-glow);
 }
 
+/* ── Reset ── */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: var(--font-family);
-  background-color: var(--background-light);
+  background-color: var(--bg-base);
   color: var(--text-primary);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  min-height: 100%;
 }
 
-h1, h2, h3, h4, h5, h6 {
+#root {
+  background-color: var(--bg-base);
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-family-serif);
-  color: var(--text-primary); /* Changed from secondary to ensure visibility on dark bg */
-  font-weight: 500;
-  letter-spacing: -0.3px;
+  color: var(--text-primary);
 }
 
 button {
@@ -64,140 +102,80 @@ a:hover {
   color: var(--primary-color);
 }
 
-/* ==========================================================================
-   Global Header / Navbar Dark Theme Fix
-   ========================================================================== */
-header, .navbar, nav {
-  background-color: var(--background-white) !important;
-  color: var(--text-primary) !important;
-  border-bottom: 1px solid var(--border-color) !important;
-  box-shadow: var(--shadow-md) !important;
-}
-
-header a, .navbar a, nav a {
-  color: var(--text-primary) !important;
-  transition: color 0.2s ease;
-}
-
-header a:hover, .navbar a:hover, nav a:hover {
-  color: var(--primary-color) !important;
-}
-
-header input[type="text"], .navbar input[type="text"] {
-  background-color: var(--background-light) !important;
-  color: var(--text-primary) !important;
-  border: 1px solid var(--border-color) !important;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-}
-
-header input::placeholder, .navbar input::placeholder {
-  color: var(--text-secondary) !important;
-}
-
-header button, .navbar button {
-  color: var(--text-primary);
-}
-
-/* Secondary Navigation (Categories) */
-.sub-navbar, .category-nav-container { 
-  background-color: var(--background-white) !important;
-  border-bottom: 1px solid var(--border-color) !important;
-}
-
-.sub-navbar a, .category-nav-container a {
-  color: var(--text-secondary) !important;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-}
-
-.sub-navbar a:hover, .category-nav-container a:hover {
-  color: var(--primary-color) !important;
-}
-
-/* ==========================================================================
-   Utilities
-   ========================================================================== */
+/* ─ Container ─ */
 .container {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
 
-/* --- Buttons --- */
+/* ─ Buttons ─ */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.85rem 1.75rem;
-  border-radius: 6px;
+  padding: 0.75rem 1.75rem;
+  border-radius: 4px;
   font-weight: 600;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
+  letter-spacing: 0.8px;
+  transition: all 0.25s ease;
   border: none;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   text-transform: uppercase;
 }
 
 .btn-primary {
-  background-color: var(--primary-color);
-  color: var(--text-inverse); /* Dark text on gold button */
-  box-shadow: 0 4px 15px rgba(198, 167, 94, 0.2);
+  background: var(--primary-color);
+  color: #0E1A2B;
+  box-shadow: var(--shadow-md);
 }
 
-.btn-primary:hover:not(:disabled) {
-  background-color: var(--primary-hover);
+.btn-primary:hover {
+  background: var(--primary-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(198, 167, 94, 0.35);
-}
-
-.btn-primary:disabled {
-  background-color: rgba(255, 255, 255, 0.06);
-  color: var(--text-secondary);
-  box-shadow: none;
-  cursor: not-allowed;
+  box-shadow: var(--shadow-gold);
+  color: #0E1A2B;
 }
 
 .btn-secondary {
-  background-color: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: var(--text-primary);
-}
-
-.btn-secondary:hover {
-  border-color: var(--primary-color);
-  background-color: rgba(198, 167, 94, 0.05);
+  background: transparent;
+  border: 1.5px solid var(--primary-color);
   color: var(--primary-color);
 }
 
+.btn-secondary:hover {
+  background: var(--primary-color);
+  color: #0E1A2B;
+  box-shadow: var(--shadow-gold);
+}
+
 .btn-ghost {
-  background-color: transparent;
+  background: transparent;
   color: var(--text-secondary);
+  border: 1px solid var(--border-color);
 }
 
 .btn-ghost:hover {
-  background-color: rgba(255, 255, 255, 0.04);
-  color: var(--text-primary);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
 }
 
-/* --- Cards --- */
+/* ─ Cards ─ */
 .card {
-  background: var(--background-white);
+  background: var(--bg-card);
   border-radius: 12px;
   border: 1px solid var(--border-color);
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
 }
 
 .card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px);
   box-shadow: var(--shadow-card);
-  border-color: var(--border-hover);
+  border-color: var(--border-gold-hover);
 }
 
-/* --- Text Colors --- */
+/* ─ Utility ─ */
 .text-primary {
   color: var(--primary-color);
 }
@@ -206,162 +184,26 @@ header button, .navbar button {
   color: var(--text-secondary);
 }
 
-/* --- Layout --- */
-.flex { display: flex; }
-.items-center { align-items: center; }
-.justify-between { justify-content: space-between; }
-.justify-center { justify-content: center; }
-.gap-2 { gap: 0.5rem; }
-.gap-4 { gap: 1rem; }
-.w-full { width: 100%; }
-.grid { display: grid; }
-/* ==========================================================================
-   DARK THEME ENFORCER (Fixes White Strips & Invisible Text)
-   ========================================================================== */
-
-/* 1. Force the Navbar & Sub-navbar to be dark */
-nav, header, .navbar, .sub-nav, .category-bar, [class*="nav"], div[style*="background: white"], div[style*="background-color: white"], div[style*="backgroundColor: white"] {
-    background-color: var(--secondary-color) !important;
-    color: var(--text-primary) !important;
-    border-bottom-color: var(--border-color) !important;
+.flex {
+  display: flex;
 }
 
-/* 2. Fix Navbar Links (Make them off-white and gold on hover) */
-nav a, header a, .sub-nav a, .category-bar a {
-    color: var(--text-secondary) !important;
-    transition: color 0.2s ease;
-}
-nav a:hover, header a:hover, .sub-nav a:hover, .category-bar a:hover {
-    color: var(--primary-color) !important;
+.items-center {
+  align-items: center;
 }
 
-/* 3. Fix the Landing Page Category Pills (Weddings, Events, etc.) */
-.pill, .category-pill, button[class*="pill"] {
-    background-color: var(--secondary-color) !important;
-    color: var(--text-secondary) !important;
-    border: 1px solid var(--border-color) !important;
-}
-.pill:hover, .pill.active, button[class*="pill"]:hover {
-    background-color: rgba(198, 167, 94, 0.1) !important;
-    color: var(--primary-color) !important;
-    border-color: var(--primary-color) !important;
+.justify-between {
+  justify-content: space-between;
 }
 
-/* 4. Fix the Landing Page Event Cards (Trending Events) */
-.event-card, .card-content, [class*="card"] {
-    background-color: var(--secondary-color) !important;
-    border: 1px solid var(--border-color) !important;
+.gap-2 {
+  gap: 0.5rem;
 }
 
-/* Force text inside the Event Cards to be visible */
-.event-card h3, .card-content h3, .card-title, [class*="card"] h3 {
-    color: var(--text-primary) !important;
-}
-.event-card p, .card-content p, .card-subtitle, .card-date, [class*="card"] p {
-    color: var(--text-secondary) !important;
-}
-/* 5. Fix the Footer (Make it coherent with the Dark Theme) */
-footer, .footer, [class*="footer"] {
-    background-color: var(--secondary-color) !important; /* Deep charcoal background */
-    color: var(--text-secondary) !important;
-    border-top: 1px solid var(--border-color) !important;
+.gap-4 {
+  gap: 1rem;
 }
 
-/* Fix headings inside the footer */
-footer h1, footer h2, footer h3, footer h4, footer h5, footer h6, 
-.footer h1, .footer h2, .footer h3, .footer h4, .footer h5, .footer h6 {
-    color: var(--text-primary) !important; /* Make headings bright white */
-}
-
-/* Fix links inside the footer */
-footer a, .footer a, [class*="footer"] a {
-    color: var(--text-secondary) !important; /* Muted grey for normal links */
-    transition: color 0.2s ease;
-}
-
-/* Add the gold hover effect to footer links */
-footer a:hover, .footer a:hover, [class*="footer"] a:hover {
-    color: var(--primary-color) !important; /* Turns gold on hover */
-}
-
-/* Strip out any inline white backgrounds inside the footer */
-footer div[style*="background"], .footer div[style*="background"] {
-    background-color: transparent !important;
-}
-/* ==========================================================================
-   ULTIMATE DARK THEME ENFORCER (Fixes White Strips & Invisible Pill Text)
-   ========================================================================== */
-
-/* 1. FORCE THE SUB-NAVBAR TO BE DARK (The white strip at the top) */
-.subnav, 
-.sub-navbar, 
-.menu-bar, 
-.secondary-nav, 
-div[style*="background: white"], 
-div[style*="background-color: white"], 
-div[style*="backgroundColor: white"] {
-    background-color: var(--secondary-color) !important;
-    border-bottom: 1px solid var(--border-color) !important;
-}
-
-.subnav a, 
-.sub-navbar a, 
-.menu-bar a, 
-.secondary-nav a, 
-.secondary-nav span,
-header span {
-    color: var(--text-primary) !important; /* Makes text bright off-white */
-}
-
-.subnav a:hover, 
-.sub-navbar a:hover, 
-.menu-bar a:hover {
-    color: var(--primary-color) !important; /* Turns gold on hover */
-}
-
-
-/* 2. FIX THE 4 CATEGORY PILLS BELOW CAROUSEL (Make text visible & background dark) */
-.categories button, 
-.categories a,
-.category-pill, 
-.pill,
-.landing-categories button, 
-.landing-categories a,
-button[style*="border-radius: 50px"],
-a[style*="border-radius: 50px"],
-.rounded-full {
-    background-color: var(--secondary-color) !important; /* Dark charcoal background */
-    color: var(--text-primary) !important; /* Bright off-white text so it is visible! */
-    border: 1px solid var(--border-color) !important; /* Subtle elegant border */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
-    transition: all 0.3s ease !important;
-}
-
-/* Hover effect for the 4 Category Pills */
-.categories button:hover, 
-.categories a:hover,
-.category-pill:hover, 
-.pill:hover,
-.landing-categories button:hover, 
-.landing-categories a:hover,
-button[style*="border-radius: 50px"]:hover {
-    background-color: rgba(198, 167, 94, 0.1) !important; /* Subtle gold glow inside */
-    color: var(--primary-color) !important; /* Gold text */
-    border-color: var(--primary-color) !important; /* Gold border */
-    transform: translateY(-2px) !important;
-}
-
-
-/* 3. FIX TRENDING EVENT CARDS (Ensure the text inside them isn't blending in) */
-.event-card, .card {
-    background-color: var(--secondary-color) !important;
-    border-color: var(--border-color) !important;
-}
-
-.event-card h3, .card h3 {
-    color: var(--text-primary) !important; /* Make title bright */
-}
-
-.event-card p, .card p, .event-card span, .card span {
-    color: var(--text-secondary) !important; /* Make dates/locations muted grey */
+.grid {
+  display: grid;
 }

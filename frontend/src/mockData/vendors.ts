@@ -59,5 +59,45 @@ export const VENDOR_PACKAGES: VendorPackage[] = [
         image: 'https://images.unsplash.com/photo-1544531586-fde5298cdd40?auto=format&fit=crop&q=80&w=800',
         services: ['Venue: Convention Center', 'AV Equipment', 'Catering', 'Breakout Rooms'],
         description: 'Full-service conference package including tech support.'
-    }
+    },
+    {
+        id: 'pkg_6',
+        name: 'Grand Birthday Bash',
+        category: 'event',
+        price: 1500,
+        rating: 4.7,
+        image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&q=80&w=800',
+        services: ['Venue: Private Banquet Hall', 'DJ & Sound', 'Decoration', 'Catering for 200'],
+        description: 'Full-service birthday & private party package with end-to-end coordination.'
+    },
+    {
+        id: 'pkg_7',
+        name: 'Festival & Anniversary Package',
+        category: 'event',
+        price: 2200,
+        rating: 4.6,
+        image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800',
+        services: ['Themed Décor', 'Photography & Video', 'Live Entertainment', 'Buffet Setup'],
+        description: 'Perfect for anniversaries, festivals and special celebrations.'
+    },
+    {
+        id: 'pkg_8',
+        name: 'Executive Board Meeting',
+        category: 'meeting',
+        price: 950,
+        rating: 4.5,
+        image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800',
+        services: ['Board Room Setup', 'AV & Projector', 'Tea/Coffee & Snacks', 'Secretariat Support'],
+        description: 'Professional boardroom package ideal for high-level corporate meetings.'
+    },
+    {
+        id: 'pkg_9',
+        name: 'Team Strategy Offsite',
+        category: 'meeting',
+        price: 1800,
+        rating: 4.8,
+        image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=800',
+        services: ['Offsite Venue', 'Breakout Sessions', 'Lunch & Dinner', 'Team Activity Coordination'],
+        description: 'Structured offsite package for strategy planning and team alignment sessions.'
+    },
 ];
