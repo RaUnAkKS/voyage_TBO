@@ -1,11 +1,12 @@
 import { useState, useMemo } from 'react';
 import { Download } from 'lucide-react';
-import { InventoryCategory } from '../../mockData/inventoryData';
+import { MOCK_INVENTORY, MOCK_EVENTS, InventoryCategory } from '../../mockData/inventoryData';
 import {
     getCategoryStats,
     getGlobalKpis,
     getEventPerformance,
     getTrendData,
+    getDateRange,
 } from './analytics/analyticsData';
 import AnalyticsKPI from './analytics/AnalyticsKPI';
 import InventoryCategoryChart from './analytics/InventoryCategoryChart';
@@ -25,10 +26,37 @@ const VendorAnalytics = () => {
     const [dateRange, setDateRange] = useState<typeof DATE_RANGES[number]>('6 months');
     const [catFilter, setCatFilter] = useState<InventoryCategory | 'ALL'>('ALL');
 
-    const catStats = useMemo(() => getCategoryStats(catFilter), [catFilter]);
-    const kpis = useMemo(() => getGlobalKpis(catFilter), [catFilter]);
-    const evtPerf = useMemo(() => getEventPerformance(catFilter), [catFilter]);
-    const trendData = useMemo(() => getTrendData(), []);
+    // Centralized Analytics State
+    const analytics = useMemo(() => {
+        const { start, end } = getDateRange(dateRange);
+
+        // 1. Filter events by date range
+        const filteredEvents = MOCK_EVENTS.filter(e => {
+            const d = new Date(e.date);
+            return d >= start && d <= end;
+        });
+
+        // 2. Filter inventory by category
+        const filteredItems = catFilter === 'ALL'
+            ? MOCK_INVENTORY
+            : MOCK_INVENTORY.filter(i => i.category === catFilter);
+
+        // 3. Derive complex data
+        const catStats = getCategoryStats(filteredItems, filteredEvents);
+        const kpis = getGlobalKpis(filteredItems, filteredEvents);
+        const evtPerf = getEventPerformance(filteredItems, filteredEvents);
+        const trendData = getTrendData(dateRange, filteredItems, filteredEvents);
+
+        return {
+            catStats,
+            kpis,
+            evtPerf,
+            trendData
+        };
+    }, [dateRange, catFilter]);
+
+    const { catStats, kpis, evtPerf, trendData } = analytics;
+    const hasInventory = MOCK_INVENTORY.length > 0;
 
     return (
         <div>
@@ -115,7 +143,9 @@ const VendorAnalytics = () => {
                                 <p className="va-chart-sub">Month-over-month inventory utilization across all categories</p>
                             </div>
                         </div>
-                        <UtilizationTrendChart data={trendData} />
+                        {hasInventory
+                            ? <UtilizationTrendChart data={trendData} />
+                            : <div className="va-empty" style={{ minHeight: 180 }}>No inventory items in system.</div>}
                     </div>
                 </div>
 
@@ -127,7 +157,9 @@ const VendorAnalytics = () => {
                             <p className="va-chart-sub">Utilization, revenue, and status per event</p>
                         </div>
                     </div>
-                    <EventPerformanceTable data={evtPerf} />
+                    {evtPerf.length > 0
+                        ? <EventPerformanceTable data={evtPerf} />
+                        : <div className="va-empty">No event performance data available for this range.</div>}
                 </div>
             </div>
         </div>

@@ -255,24 +255,39 @@
 
 /* tooltip */
 .va-tooltip {
-    position: fixed;
-    background: var(--va-surface);
-    border: 1px solid var(--va-border);
+    position: absolute;
+    background: #1E1E1E;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
-    padding: 0.55rem 0.85rem;
+    padding: 8px 12px;
     font-size: 0.78rem;
-    color: var(--va-text);
+    color: #EAEAEA;
     pointer-events: none;
     z-index: 9999;
     white-space: nowrap;
-    box-shadow: var(--va-shadow);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    transform: translate(-50%, -110%);
+    animation: va-tooltip-fade 0.2s ease-out;
+}
+
+@keyframes va-tooltip-fade {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -110%);
+    }
 }
 
 .va-tooltip-label {
     color: var(--va-gold);
     font-weight: 700;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
+    font-size: 0.82rem;
 }
 
 /* Chart legend */

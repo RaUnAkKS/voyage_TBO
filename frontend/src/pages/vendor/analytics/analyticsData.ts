@@ -1,5 +1,21 @@
-import { MOCK_INVENTORY, MOCK_EVENTS } from '../../../mockData/inventoryData';
-import { getAllocated, getAvailable } from '../inventory/InventoryLayout';
+import { InventoryItem, EventRecord } from '../../../mockData/inventoryData';
+
+// ── Date Helpers ──────────────────────────────────────────────────────────────
+export const getDateRange = (range: string) => {
+    const end = new Date('2026-12-31'); // Reference end for mock data
+    const start = new Date('2026-01-01');
+
+    if (range === 'Last 30 days') {
+        start.setMonth(end.getMonth() - 1);
+    } else if (range === '3 months') {
+        start.setMonth(end.getMonth() - 3);
+    } else if (range === '6 months') {
+        start.setMonth(end.getMonth() - 6);
+    } else {
+        start.setFullYear(end.getFullYear() - 1);
+    }
+    return { start, end };
+};
 
 // ── Category breakdown ────────────────────────────────────────────────────────
 const CATEGORY_COLORS: Record<string, string> = {
@@ -21,15 +37,18 @@ export interface CatStat {
     color: string;
 }
 
-export const getCategoryStats = (catFilter: string): CatStat[] => {
-    const items = catFilter === 'ALL'
-        ? MOCK_INVENTORY
-        : MOCK_INVENTORY.filter(i => i.category === catFilter);
-
+export const getCategoryStats = (items: InventoryItem[], events: EventRecord[]): CatStat[] => {
     const map: Record<string, CatStat> = {};
+
     items.forEach(item => {
-        const alloc = getAllocated(item);
-        const avail = getAvailable(item);
+        // Only count allocations for events in the filtered range
+        const filteredAllocations = item.allocations.filter(a =>
+            events.some(e => e.id === a.eventId)
+        );
+
+        const allocated = filteredAllocations.reduce((s, a) => s + a.quantityAllocated, 0);
+        const available = item.totalQuantity - allocated;
+
         if (!map[item.category]) {
             map[item.category] = {
                 cat: item.category,
@@ -41,36 +60,37 @@ export const getCategoryStats = (catFilter: string): CatStat[] => {
             };
         }
         map[item.category].totalQty += item.totalQuantity;
-        map[item.category].allocated += alloc;
-        map[item.category].available += avail;
+        map[item.category].allocated += allocated;
+        map[item.category].available += available;
     });
 
-    return Object.values(map).map(s => ({
-        ...s,
-        utilPct: s.totalQty > 0 ? Math.round((s.allocated / s.totalQty) * 100) : 0,
-    }));
+    return Object.values(map)
+        .filter(s => s.totalQty > 0)
+        .map(s => ({
+            ...s,
+            utilPct: s.totalQty > 0 ? Math.round((s.allocated / s.totalQty) * 100) : 0,
+        }));
 };
 
 // ── Global KPIs ───────────────────────────────────────────────────────────────
-export const getGlobalKpis = (catFilter: string) => {
-    const items = catFilter === 'ALL'
-        ? MOCK_INVENTORY
-        : MOCK_INVENTORY.filter(i => i.category === catFilter);
-
+export const getGlobalKpis = (items: InventoryItem[], events: EventRecord[]) => {
     const totalQty = items.reduce((s, i) => s + i.totalQuantity, 0);
-    const totalAlloc = items.reduce((s, i) => s + getAllocated(i), 0);
-    const utilPct = totalQty > 0 ? Math.round((totalAlloc / totalQty) * 100) : 0;
+    const totalAlloc = items.reduce((iSum, item) => {
+        const allocs = item.allocations.filter(a => events.some(e => e.id === a.eventId));
+        return iSum + allocs.reduce((s, a) => s + a.quantityAllocated, 0);
+    }, 0);
 
-    const activeEvents = MOCK_EVENTS.filter(e =>
+    const utilPct = totalQty > 0 ? Math.round((totalAlloc / totalQty) * 100) : 0;
+    const activeEvents = events.filter(e =>
         items.some(i => i.allocations.some(a => a.eventId === e.id))
     ).length;
 
     const lowCapacity = items.filter(i => {
-        const avail = getAvailable(i);
-        return avail < i.totalQuantity * 0.2;
+        const allocs = i.allocations.filter(a => events.some(e => e.id === a.eventId));
+        const used = allocs.reduce((s, a) => s + a.quantityAllocated, 0);
+        return (i.totalQuantity - used) < i.totalQuantity * 0.2;
     }).length;
 
-    // Mock revenue — ₹2400 per allocated unit
     const revenueLakh = Math.round((totalAlloc * 2400) / 100000 * 10) / 10;
 
     return { utilPct, activeEvents, revenueLakh, lowCapacity };
@@ -87,12 +107,10 @@ export interface EventPerf {
     isActive: boolean;
 }
 
-export const getEventPerformance = (catFilter: string): EventPerf[] => {
-    const items = catFilter === 'ALL'
-        ? MOCK_INVENTORY
-        : MOCK_INVENTORY.filter(i => i.category === catFilter);
+export const getEventPerformance = (items: InventoryItem[], events: EventRecord[]): EventPerf[] => {
+    const today = new Date();
 
-    return MOCK_EVENTS.map(evt => {
+    return events.map(evt => {
         let totalAlloc = 0;
         let totalQty = 0;
 
@@ -106,7 +124,7 @@ export const getEventPerformance = (catFilter: string): EventPerf[] => {
 
         const utilPct = totalQty > 0 ? Math.round((totalAlloc / totalQty) * 100) : 0;
         const revenueLakh = Math.round((totalAlloc * 2400) / 100000 * 10) / 10;
-        const isActive = new Date(evt.date) >= new Date('2025-03-01');
+        const isActive = new Date(evt.date) >= today;
 
         return {
             id: evt.id,
@@ -120,14 +138,84 @@ export const getEventPerformance = (catFilter: string): EventPerf[] => {
     }).filter(e => e.totalAllocated > 0);
 };
 
-// ── Trend data (6 months mock) ────────────────────────────────────────────────
-export interface TrendPoint { month: string; utilPct: number; }
+// ── Trend data ────────────────────────────────────────────────────────────────
+export interface TrendPoint { label: string; utilPct: number; }
 
-export const getTrendData = (): TrendPoint[] => [
-    { month: 'Sep', utilPct: 24 },
-    { month: 'Oct', utilPct: 31 },
-    { month: 'Nov', utilPct: 28 },
-    { month: 'Dec', utilPct: 45 },
-    { month: 'Jan', utilPct: 38 },
-    { month: 'Feb', utilPct: 53 },
-];
+export const getTrendData = (
+    range: string,
+    items: InventoryItem[],
+    events: EventRecord[]
+): TrendPoint[] => {
+    const { start, end } = getDateRange(range);
+    const buckets: { date: Date; label: string; alloc: number; total: number }[] = [];
+
+    // 1. Generate Buckets
+    if (range === 'Last 30 days') {
+        const curr = new Date(start);
+        while (curr <= end) {
+            buckets.push({
+                date: new Date(curr),
+                label: curr.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                alloc: 0,
+                total: 0
+            });
+            curr.setDate(curr.getDate() + 1);
+        }
+    } else {
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const curr = new Date(start);
+        curr.setDate(1); // Start of month
+        while (curr <= end) {
+            buckets.push({
+                date: new Date(curr),
+                label: months[curr.getMonth()],
+                alloc: 0,
+                total: 0
+            });
+            curr.setMonth(curr.getMonth() + 1);
+        }
+    }
+
+    // 2. Map Data into Buckets
+    events.forEach(evt => {
+        const evtDate = new Date(evt.date);
+
+        // Find matching bucket
+        let bucketIdx = -1;
+        if (range === 'Last 30 days') {
+            bucketIdx = buckets.findIndex(b =>
+                b.date.getFullYear() === evtDate.getFullYear() &&
+                b.date.getMonth() === evtDate.getMonth() &&
+                b.date.getDate() === evtDate.getDate()
+            );
+        } else {
+            bucketIdx = buckets.findIndex(b =>
+                b.date.getFullYear() === evtDate.getFullYear() &&
+                b.date.getMonth() === evtDate.getMonth()
+            );
+        }
+
+        if (bucketIdx !== -1) {
+            items.forEach(i => {
+                const a = i.allocations.find(al => al.eventId === evt.id);
+                if (a) {
+                    buckets[bucketIdx].alloc += a.quantityAllocated;
+                    buckets[bucketIdx].total += i.totalQuantity;
+                }
+            });
+        }
+    });
+
+    // 3. Convert to TrendPoints
+    const result = buckets.map(b => ({
+        label: b.label,
+        utilPct: b.total > 0 ? Math.round((b.alloc / b.total) * 100) : 0
+    }));
+
+    // Ensure minimum 2 points for the chart
+    if (result.length < 2 && result.length > 0) {
+        return [{ label: '', utilPct: 0 }, ...result];
+    }
+
+    return result;
+};
