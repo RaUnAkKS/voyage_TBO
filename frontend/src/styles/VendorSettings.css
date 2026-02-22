@@ -1,0 +1,901 @@
+/* ── Vendor Settings — Charcoal Black + Bronze Gold ── */
+
+:root {
+    --vs-bg: #121212;
+    --vs-surface: #1A1A1D;
+    --vs-card: #1E1E1E;
+    --vs-deep: #181818;
+    --vs-border: rgba(255, 255, 255, 0.06);
+    --vs-gold: #C6A75E;
+    --vs-gold-dim: rgba(198, 167, 94, 0.1);
+    --vs-gold-glow: rgba(198, 167, 94, 0.25);
+    --vs-text: #FFFFFF;
+    --vs-muted: #B5B5B5;
+    --vs-hint: #565656;
+    --vs-err: #E05C5C;
+    --vs-err-bg: rgba(224, 92, 92, 0.1);
+    --vs-green: #4CAF82;
+    --vs-radius: 10px;
+    --vs-serif: 'Playfair Display', Georgia, serif;
+    --vs-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --vs-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+    --vs-tr: all 0.25s ease;
+}
+
+/* Page */
+html,
+body,
+#root {
+    background: var(--vs-bg);
+    color: var(--vs-text);
+    font-family: var(--vs-sans);
+    margin: 0;
+    padding: 0;
+}
+
+.vs-page {
+    display: flex;
+    min-height: 100vh;
+    background: var(--vs-bg);
+}
+
+/* ── Sidebar (reusing inventory sidebar pattern) ── */
+.vs-sidebar {
+    width: 240px;
+    background: var(--vs-surface);
+    border-right: 1px solid var(--vs-border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    z-index: 100;
+}
+
+.vs-sidebar-logo {
+    padding: 1.75rem 1.5rem;
+    border-bottom: 1px solid var(--vs-border);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.vs-sidebar-logo-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--vs-gold);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #000;
+}
+
+.vs-sidebar-logo span {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--vs-text);
+}
+
+.vs-sidebar-section-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--vs-hint);
+    padding: 1.5rem 1.5rem 0.5rem;
+}
+
+.vs-sidebar-nav {
+    padding: 0.5rem 0.75rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow-y: auto;
+}
+
+.vs-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.85rem;
+    border-radius: 8px;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    color: var(--vs-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--vs-tr);
+}
+
+.vs-nav-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--vs-text);
+}
+
+.vs-nav-item.active {
+    background: var(--vs-gold-dim);
+    color: var(--vs-gold);
+}
+
+.vs-sidebar-bottom {
+    padding: 1rem 0.75rem;
+    border-top: 1px solid var(--vs-border);
+}
+
+/* ── Main ── */
+.vs-main {
+    margin-left: 240px;
+    flex: 1;
+    min-height: 100vh;
+    background: var(--vs-bg);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Top Bar ── */
+.vs-topbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1.75rem 2.5rem;
+    border-bottom: 1px solid var(--vs-border);
+    background: var(--vs-surface);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.vs-topbar-title h1 {
+    font-family: var(--vs-serif);
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--vs-text);
+    margin: 0;
+    line-height: 1;
+}
+
+.vs-topbar-title p {
+    margin: 0.35rem 0 0;
+    font-size: 0.82rem;
+    color: var(--vs-muted);
+}
+
+.vs-topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* Unsaved dot */
+.vs-unsaved-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--vs-gold);
+    box-shadow: 0 0 8px var(--vs-gold-glow);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+}
+
+/* Primary Button */
+.vs-btn-primary {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: var(--vs-gold);
+    color: #0A0A0A;
+    border: none;
+    border-radius: 8px;
+    padding: 0.65rem 1.35rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--vs-tr);
+}
+
+.vs-btn-primary:hover {
+    background: #D4B76A;
+    box-shadow: 0 4px 18px rgba(198, 167, 94, 0.4);
+    transform: translateY(-2px);
+}
+
+.vs-btn-ghost {
+    background: transparent;
+    color: var(--vs-muted);
+    border: 1px solid var(--vs-border);
+    border-radius: 8px;
+    padding: 0.55rem 1rem;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: var(--vs-tr);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.vs-btn-ghost:hover {
+    border-color: var(--vs-gold);
+    color: var(--vs-gold);
+}
+
+/* Danger Button */
+.vs-btn-danger {
+    background: var(--vs-err-bg);
+    color: var(--vs-err);
+    border: 1px solid rgba(224, 92, 92, 0.3);
+    border-radius: 8px;
+    padding: 0.65rem 1.35rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--vs-tr);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.vs-btn-danger:hover {
+    background: rgba(224, 92, 92, 0.18);
+    box-shadow: 0 0 20px rgba(224, 92, 92, 0.15);
+}
+
+.vs-btn-danger.outline {
+    background: transparent;
+}
+
+/* ── Content ── */
+.vs-content {
+    padding: 2rem 2.5rem;
+    flex: 1;
+    max-width: 900px;
+}
+
+/* ── Tabs ── */
+.vs-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--vs-border);
+    margin-bottom: 2.5rem;
+    overflow-x: auto;
+}
+
+.vs-tab {
+    padding: 0.9rem 1.5rem;
+    background: none;
+    border: none;
+    color: var(--vs-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    white-space: nowrap;
+    transition: color 0.2s;
+    flex-shrink: 0;
+}
+
+.vs-tab::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--vs-gold);
+    transform: scaleX(0);
+    transition: transform 0.25s ease;
+}
+
+.vs-tab.active {
+    color: var(--vs-gold);
+}
+
+.vs-tab.active::after {
+    transform: scaleX(1);
+    box-shadow: 0 0 10px rgba(198, 167, 94, 0.5);
+}
+
+.vs-tab:hover {
+    color: var(--vs-text);
+}
+
+.vs-tab.danger {
+    color: var(--vs-err);
+}
+
+.vs-tab.danger::after {
+    background: var(--vs-err);
+}
+
+.vs-tab.danger.active {
+    color: var(--vs-err);
+}
+
+/* ── Form Card ── */
+.vs-card {
+    background: var(--vs-card);
+    border: 1px solid var(--vs-border);
+    border-radius: var(--vs-radius);
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.vs-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--vs-text);
+    margin: 0 0 0.35rem;
+}
+
+.vs-card-sub {
+    font-size: 0.8rem;
+    color: var(--vs-muted);
+    margin: 0 0 2rem;
+}
+
+.vs-card-divider {
+    border: none;
+    border-top: 1px solid var(--vs-border);
+    margin: 2rem 0;
+}
+
+/* Section header inside card */
+.vs-section-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--vs-hint);
+    margin-bottom: 1.25rem;
+    display: block;
+}
+
+/* ── Form Layout ── */
+.vs-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.vs-form-full {
+    grid-column: 1 / -1;
+}
+
+/* Field */
+.vs-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.vs-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--vs-muted);
+}
+
+.vs-input,
+.vs-select,
+.vs-textarea {
+    width: 100%;
+    background: #1A1A1A;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    color: var(--vs-text);
+    font-size: 0.9rem;
+    font-family: var(--vs-sans);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    padding: 0.65rem 0.95rem;
+    box-sizing: border-box;
+}
+
+.vs-input:hover,
+.vs-select:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.vs-input:focus,
+.vs-select:focus,
+.vs-textarea:focus {
+    border-color: var(--vs-gold);
+    box-shadow: 0 0 0 3px rgba(198, 167, 94, 0.1);
+}
+
+.vs-input::placeholder {
+    color: #3A3A3A;
+}
+
+.vs-textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+.vs-select {
+    appearance: none;
+    cursor: pointer;
+}
+
+.vs-input.err {
+    border-color: var(--vs-err);
+}
+
+.vs-err-msg {
+    font-size: 0.75rem;
+    color: var(--vs-err);
+}
+
+/* Password Wrapper */
+.vs-pw-wrap {
+    position: relative;
+}
+
+.vs-pw-wrap .vs-input {
+    padding-right: 2.75rem;
+}
+
+.vs-pw-toggle {
+    position: absolute;
+    right: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--vs-hint);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.vs-pw-toggle:hover {
+    color: var(--vs-gold);
+}
+
+/* ── Logo Upload ── */
+.vs-logo-upload {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.vs-logo-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--vs-surface);
+    border: 2px solid var(--vs-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.vs-logo-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.vs-logo-circle-placeholder {
+    color: var(--vs-hint);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.vs-logo-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.vs-logo-hint {
+    font-size: 0.75rem;
+    color: var(--vs-hint);
+}
+
+/* ── Tags (multi-select) ── */
+.vs-tags-input {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    background: #1A1A1A;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    min-height: 48px;
+    cursor: text;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.vs-tags-input:focus-within {
+    border-color: var(--vs-gold);
+    box-shadow: 0 0 0 3px rgba(198, 167, 94, 0.1);
+}
+
+.vs-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.7rem;
+    background: var(--vs-gold-dim);
+    border: 1px solid rgba(198, 167, 94, 0.25);
+    border-radius: 20px;
+    font-size: 0.78rem;
+    color: var(--vs-gold);
+    font-weight: 600;
+}
+
+.vs-tag-remove {
+    background: none;
+    border: none;
+    color: var(--vs-gold);
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.vs-tag-remove:hover {
+    opacity: 1;
+}
+
+.vs-tags-input input {
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--vs-text);
+    font-size: 0.875rem;
+    min-width: 80px;
+    flex: 1;
+    padding: 0;
+}
+
+.vs-tag-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.vs-tag-sugg {
+    padding: 0.3rem 0.85rem;
+    border: 1px solid var(--vs-border);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--vs-muted);
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: var(--vs-tr);
+}
+
+.vs-tag-sugg:hover {
+    border-color: var(--vs-gold);
+    color: var(--vs-gold);
+}
+
+/* ── Toggle Switch ── */
+.vs-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.vs-toggle-row:last-child {
+    border-bottom: none;
+}
+
+.vs-toggle-info h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--vs-text);
+    margin: 0 0 0.15rem;
+}
+
+.vs-toggle-info p {
+    font-size: 0.78rem;
+    color: var(--vs-muted);
+    margin: 0;
+}
+
+.vs-toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.vs-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.vs-toggle-track {
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+    transition: background 0.25s;
+}
+
+.vs-toggle input:checked+.vs-toggle-track {
+    background: var(--vs-gold);
+}
+
+.vs-toggle-track::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.vs-toggle input:checked+.vs-toggle-track::after {
+    transform: translateX(20px);
+    box-shadow: 0 0 8px rgba(198, 167, 94, 0.5);
+}
+
+/* ── Sessions List ── */
+.vs-session-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.1rem;
+    background: var(--vs-surface);
+    border: 1px solid var(--vs-border);
+    border-radius: 8px;
+    margin-bottom: 0.65rem;
+}
+
+.vs-session-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.vs-session-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--vs-gold-dim);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--vs-gold);
+    flex-shrink: 0;
+}
+
+.vs-session-device {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--vs-text);
+}
+
+.vs-session-meta {
+    font-size: 0.75rem;
+    color: var(--vs-muted);
+    margin-top: 0.15rem;
+}
+
+.vs-badge-current {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.2rem 0.55rem;
+    border-radius: 20px;
+    background: var(--vs-gold-dim);
+    color: var(--vs-gold);
+    margin-left: 0.5rem;
+}
+
+/* ── Danger Zone Card ── */
+.vs-danger-card {
+    background: rgba(224, 92, 92, 0.04);
+    border: 1px solid rgba(224, 92, 92, 0.2);
+    border-radius: var(--vs-radius);
+    padding: 1.75rem 2rem;
+    margin-bottom: 1.25rem;
+}
+
+.vs-danger-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.vs-danger-info h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--vs-text);
+    margin: 0 0 0.35rem;
+}
+
+.vs-danger-info p {
+    font-size: 0.82rem;
+    color: var(--vs-muted);
+    margin: 0;
+    max-width: 440px;
+}
+
+/* ── Confirmation Modal ── */
+.vs-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+    animation: fadeIn 0.2s ease;
+}
+
+.vs-modal {
+    background: var(--vs-card);
+    border: 1px solid rgba(224, 92, 92, 0.25);
+    border-radius: 16px;
+    padding: 2.25rem;
+    width: 460px;
+    max-width: 92vw;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+    animation: popIn 0.25s ease;
+}
+
+@keyframes popIn {
+    from {
+        transform: scale(0.94);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.vs-modal h3 {
+    font-family: var(--vs-serif);
+    font-size: 1.3rem;
+    color: var(--vs-text);
+    margin: 0 0 0.75rem;
+}
+
+.vs-modal p {
+    font-size: 0.875rem;
+    color: var(--vs-muted);
+    margin: 0 0 1.5rem;
+    line-height: 1.6;
+}
+
+.vs-modal-confirm {
+    font-size: 0.82rem;
+    color: var(--vs-muted);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.vs-modal .vs-input {
+    margin-bottom: 1.5rem;
+}
+
+.vs-modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+}
+
+/* ── Toast ── */
+.vs-toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 400;
+    background: var(--vs-green);
+    color: #fff;
+    border-radius: 10px;
+    padding: 0.85rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    animation: slideUp 0.3s ease;
+}
+
+.vs-toast.error {
+    background: var(--vs-err);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+    .vs-sidebar {
+        display: none;
+    }
+
+    .vs-main {
+        margin-left: 0;
+    }
+
+    .vs-topbar {
+        padding: 1rem 1.25rem;
+    }
+
+    .vs-content {
+        padding: 1.25rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .vs-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .vs-danger-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .vs-tabs {
+        gap: 0;
+    }
+
+    .vs-tab {
+        padding: 0.8rem 1rem;
+        font-size: 0.8rem;
+    }
+}

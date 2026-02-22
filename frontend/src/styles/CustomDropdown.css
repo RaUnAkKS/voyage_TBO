@@ -1,0 +1,110 @@
+/* ── Custom Dropdown — Dark Luxury Theme ── */
+
+.cd-root {
+    position: relative;
+    display: inline-block;
+}
+
+/* ── Trigger button ── */
+.cd-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 0.5rem 0.85rem;
+    color: #B5B5B5;
+    font-size: 0.82rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    white-space: nowrap;
+    text-align: left;
+}
+
+.cd-trigger:hover {
+    border-color: rgba(198, 167, 94, 0.35);
+    color: #FFFFFF;
+    box-shadow: 0 0 0 2px rgba(198, 167, 94, 0.08);
+}
+
+.cd-trigger.open {
+    border-color: rgba(198, 167, 94, 0.45);
+    color: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(198, 167, 94, 0.1);
+}
+
+.cd-label {
+    flex: 1;
+}
+
+/* ── Animated chevron ── */
+.cd-chevron {
+    color: #525252;
+    flex-shrink: 0;
+    transition: transform 0.22s ease, color 0.2s;
+}
+
+.cd-chevron.open {
+    transform: rotate(180deg);
+    color: #C6A75E;
+}
+
+/* ── Dropdown panel ── */
+.cd-panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 999;
+    list-style: none;
+    margin: 0;
+    padding: 0.35rem;
+    background: #1E1E1E;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(198, 167, 94, 0.08);
+    animation: cd-slide-in 0.18s ease both;
+    min-width: 100%;
+}
+
+@keyframes cd-slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Options ── */
+.cd-option {
+    padding: 0.52rem 0.85rem;
+    font-size: 0.82rem;
+    color: #B5B5B5;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    outline: none;
+}
+
+.cd-option:hover {
+    background: rgba(198, 167, 94, 0.1);
+    color: #FFFFFF;
+}
+
+.cd-option.selected {
+    color: #C6A75E;
+    font-weight: 600;
+    background: rgba(198, 167, 94, 0.07);
+}
+
+.cd-option:focus-visible {
+    background: rgba(198, 167, 94, 0.12);
+    color: #FFFFFF;
+}

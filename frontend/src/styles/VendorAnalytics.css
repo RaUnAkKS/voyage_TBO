@@ -1,0 +1,704 @@
+/* ── Vendor Analytics — Charcoal Black + Bronze Gold ── */
+
+:root {
+    --va-bg: #121212;
+    --va-surface: #1A1A1D;
+    --va-card: #1E1E1E;
+    --va-border: rgba(255, 255, 255, 0.06);
+    --va-gold: #C6A75E;
+    --va-gold-dim: rgba(198, 167, 94, 0.14);
+    --va-gold-glow: rgba(198, 167, 94, 0.24);
+    --va-gold-2: #E8C97A;
+    --va-gold-3: #A08540;
+    --va-muted: #B5B5B5;
+    --va-hint: #525252;
+    --va-text: #FFFFFF;
+    --va-err: #E05C5C;
+    --va-green: #4CAF82;
+    --va-serif: 'Playfair Display', Georgia, serif;
+    --va-sans: 'Inter', -apple-system, sans-serif;
+    --va-tr: all 0.25s ease;
+    --va-radius: 12px;
+    --va-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Page Frame ────────────────────────────────────── */
+.va-page {
+    background: var(--va-bg);
+    color: var(--va-text);
+    font-family: var(--va-sans);
+    min-height: 100vh;
+}
+
+/* ── Content area ──────────────────────────────────── */
+.va-content {
+    padding: 2rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* ── Section title ─────────────────────────────────── */
+.va-section-title {
+    font-family: var(--va-serif);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--va-text);
+    margin: 0 0 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.va-section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--va-border);
+}
+
+/* ══════════════════════════════════════════════════════
+   KPI CARDS
+══════════════════════════════════════════════════════ */
+.va-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+}
+
+.va-kpi-card {
+    background: var(--va-card);
+    border: 1px solid var(--va-border);
+    border-radius: var(--va-radius);
+    padding: 1.4rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    transition: var(--va-tr);
+}
+
+.va-kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--va-gold), transparent);
+    opacity: 0.6;
+    transition: opacity 0.25s;
+}
+
+.va-kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(198, 167, 94, 0.12);
+    border-color: rgba(198, 167, 94, 0.2);
+}
+
+.va-kpi-card:hover::before {
+    opacity: 1;
+}
+
+.va-kpi-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--va-muted);
+    margin-bottom: 0.65rem;
+}
+
+.va-kpi-value {
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: var(--va-text);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+}
+
+.va-kpi-value.gold {
+    color: var(--va-gold);
+}
+
+.va-kpi-sub {
+    font-size: 0.78rem;
+    color: var(--va-hint);
+    margin-top: 0.35rem;
+}
+
+/* Utilization bar */
+.va-kpi-bar {
+    margin-top: 0.85rem;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.va-kpi-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--va-gold), var(--va-gold-2));
+    border-radius: 2px;
+    transition: width 1s ease;
+}
+
+/* Trend indicator  */
+.va-kpi-trend {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.va-kpi-trend.up {
+    color: var(--va-green);
+}
+
+.va-kpi-trend.warn {
+    color: var(--va-err);
+}
+
+/* ══════════════════════════════════════════════════════
+   CHART CARDS
+══════════════════════════════════════════════════════ */
+.va-chart-row {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.va-chart-row.two-col {
+    grid-template-columns: 1fr 1fr;
+}
+
+.va-chart-row.one-col {
+    grid-template-columns: 1fr;
+}
+
+.va-chart-card {
+    background: var(--va-card);
+    border: 1px solid var(--va-border);
+    border-radius: var(--va-radius);
+    padding: 1.5rem;
+    transition: var(--va-tr);
+}
+
+.va-chart-card:hover {
+    border-color: rgba(198, 167, 94, 0.15);
+    box-shadow: 0 4px 28px rgba(0, 0, 0, 0.4);
+}
+
+.va-chart-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+}
+
+.va-chart-title {
+    font-family: var(--va-serif);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--va-text);
+    margin: 0;
+}
+
+.va-chart-sub {
+    font-size: 0.78rem;
+    color: var(--va-hint);
+    margin: 0.2rem 0 0;
+}
+
+/* ══════════════════════════════════════════════════════
+   BAR CHART
+══════════════════════════════════════════════════════ */
+.va-bar-chart {
+    width: 100%;
+    overflow: hidden;
+}
+
+.va-bar-group {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+}
+
+.va-bar-label {
+    font-size: 0.65rem;
+    color: var(--va-hint);
+    text-anchor: middle;
+}
+
+.va-bar-total {
+    fill: rgba(198, 167, 94, 0.25);
+    rx: 3;
+    transition: fill 0.2s;
+}
+
+.va-bar-alloc {
+    fill: var(--va-gold);
+    rx: 3;
+    transition: fill 0.2s;
+}
+
+.va-bar-total:hover {
+    fill: rgba(198, 167, 94, 0.4);
+}
+
+.va-bar-alloc:hover {
+    fill: var(--va-gold-2);
+}
+
+/* tooltip */
+.va-tooltip {
+    position: fixed;
+    background: var(--va-surface);
+    border: 1px solid var(--va-border);
+    border-radius: 8px;
+    padding: 0.55rem 0.85rem;
+    font-size: 0.78rem;
+    color: var(--va-text);
+    pointer-events: none;
+    z-index: 9999;
+    white-space: nowrap;
+    box-shadow: var(--va-shadow);
+    backdrop-filter: blur(10px);
+}
+
+.va-tooltip-label {
+    color: var(--va-gold);
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+/* Chart legend */
+.va-legend {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.va-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--va-muted);
+}
+
+.va-legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+}
+
+/* ══════════════════════════════════════════════════════
+   DONUT CHART
+══════════════════════════════════════════════════════ */
+.va-donut-wrap {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.va-donut-svg-wrap {
+    flex-shrink: 0;
+    position: relative;
+}
+
+.va-donut-center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+}
+
+.va-donut-center-val {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--va-gold);
+    line-height: 1;
+}
+
+.va-donut-center-lab {
+    font-size: 0.68rem;
+    color: var(--va-hint);
+    margin-top: 2px;
+}
+
+.va-donut-legend {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-width: 140px;
+}
+
+.va-donut-legend-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+}
+
+.va-donut-legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.va-donut-legend-label {
+    color: var(--va-muted);
+}
+
+.va-donut-legend-pct {
+    margin-left: auto;
+    color: var(--va-text);
+    font-weight: 600;
+}
+
+/* ══════════════════════════════════════════════════════
+   LINE CHART
+══════════════════════════════════════════════════════ */
+.va-line-chart {
+    width: 100%;
+}
+
+.va-line-path {
+    fill: none;
+    stroke: var(--va-gold);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.va-line-area {
+    fill: url(#va-area-gradient);
+}
+
+.va-line-dot {
+    fill: var(--va-gold);
+    stroke: var(--va-card);
+    stroke-width: 2;
+    cursor: pointer;
+    transition: r 0.15s, fill 0.15s;
+}
+
+.va-line-dot:hover {
+    fill: var(--va-gold-2);
+    r: 6;
+    filter: drop-shadow(0 0 6px var(--va-gold));
+}
+
+.va-x-label,
+.va-y-label {
+    fill: var(--va-hint);
+    font-size: 11px;
+    font-family: var(--va-sans);
+}
+
+.va-grid-line {
+    stroke: rgba(255, 255, 255, 0.04);
+    stroke-width: 1;
+}
+
+/* ══════════════════════════════════════════════════════
+   EVENT PERFORMANCE TABLE
+══════════════════════════════════════════════════════ */
+.va-table-card {
+    overflow-x: auto;
+}
+
+.va-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.va-table th {
+    text-align: left;
+    padding: 0.85rem 1rem;
+    color: var(--va-hint);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    border-bottom: 1px solid var(--va-border);
+    white-space: nowrap;
+}
+
+.va-table td {
+    padding: 1rem 1rem;
+    color: var(--va-muted);
+    border-bottom: 1px solid var(--va-border);
+    white-space: nowrap;
+    transition: background 0.2s;
+}
+
+.va-table tr:hover td {
+    background: rgba(198, 167, 94, 0.04);
+}
+
+.va-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.va-table td strong {
+    color: var(--va-text);
+}
+
+/* Type badge */
+.va-type-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    background: rgba(198, 167, 94, 0.1);
+    color: var(--va-gold);
+    border: 1px solid rgba(198, 167, 94, 0.2);
+}
+
+/* Status badge */
+.va-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.va-status.active {
+    background: rgba(76, 175, 130, 0.12);
+    color: #4CAF82;
+}
+
+.va-status.completed {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--va-hint);
+}
+
+/* Util bar in table */
+.va-util-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 120px;
+}
+
+.va-util-track {
+    flex: 1;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.va-util-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.8s ease;
+}
+
+.va-util-val {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--va-text);
+    min-width: 36px;
+    text-align: right;
+}
+
+/* ══════════════════════════════════════════════════════
+   FILTER CONTROLS
+══════════════════════════════════════════════════════ */
+.va-filters {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+.va-filter-chips {
+    display: flex;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--va-border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.va-chip {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.78rem;
+    color: var(--va-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: var(--va-tr);
+    white-space: nowrap;
+}
+
+.va-chip.active {
+    background: var(--va-gold-dim);
+    color: var(--va-gold);
+    font-weight: 600;
+}
+
+.va-chip:not(.active):hover {
+    color: var(--va-text);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.va-select {
+    background: var(--va-card);
+    border: 1px solid var(--va-border);
+    border-radius: 8px;
+    padding: 0.5rem 2rem 0.5rem 0.85rem;
+    color: var(--va-muted);
+    font-size: 0.82rem;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.65rem center;
+}
+
+.va-select:focus {
+    border-color: rgba(198, 167, 94, 0.4);
+    color: var(--va-text);
+}
+
+.va-btn-export {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--va-gold);
+    color: var(--va-gold);
+    background: none;
+    border-radius: 8px;
+    padding: 0.5rem 1.1rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--va-tr);
+}
+
+.va-btn-export:hover {
+    background: var(--va-gold-dim);
+    box-shadow: 0 0 12px var(--va-gold-glow);
+}
+
+/* ══════════════════════════════════════════════════════
+   EMPTY / LOADING
+══════════════════════════════════════════════════════ */
+.va-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    color: var(--va-hint);
+    gap: 0.75rem;
+}
+
+/* ══════════════════════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════════════════════ */
+@keyframes va-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.va-kpi-card {
+    animation: va-fade-up 0.35s ease both;
+}
+
+.va-chart-card {
+    animation: va-fade-up 0.4s ease both;
+}
+
+.va-kpi-card:nth-child(1) {
+    animation-delay: 0.04s;
+}
+
+.va-kpi-card:nth-child(2) {
+    animation-delay: 0.08s;
+}
+
+.va-kpi-card:nth-child(3) {
+    animation-delay: 0.12s;
+}
+
+.va-kpi-card:nth-child(4) {
+    animation-delay: 0.16s;
+}
+
+/* SVG line draw animation */
+.va-line-path {
+    stroke-dasharray: 2000;
+    stroke-dashoffset: 2000;
+    animation: va-draw-line 1.4s ease forwards;
+}
+
+@keyframes va-draw-line {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+.va-line-dot {
+    animation: va-fade-up 0.4s ease both;
+}
+
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════ */
+@media (max-width: 1100px) {
+    .va-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .va-chart-row.two-col {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .va-kpi-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .va-content {
+        padding: 1rem;
+        gap: 1.25rem;
+    }
+
+    .va-donut-wrap {
+        flex-direction: column;
+    }
+
+    .va-filters {
+        flex-wrap: wrap;
+    }
+}
