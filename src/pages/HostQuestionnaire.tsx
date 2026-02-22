@@ -1,254 +1,340 @@
-import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { MapPin, Calendar, Building, Users, DollarSign, Sparkles, Heart } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { ChevronDown, X, Check } from 'lucide-react';
+import '../styles/HostEventForm.css';
 
-const HostQuestionnaire = () => {
-    const navigate = useNavigate();
-    const { category } = useParams(); // Gets 'wedding', 'conference', etc. from the URL
+// ── DATA ────────────────────────────────────────────────────────────────────
+const EVENT_TYPES: Record<string, string[]> = {
+    wedding: ['Haldi', 'Mehndi', 'Sangeet', 'Wedding'],
+    events: ['Birthday Party', 'Anniversary', 'Private Party', 'Festival Event'],
+    conferences: ['Tech Conference', 'Business Summit', 'Startup Meet', 'Workshop'],
+    meetings: ['Corporate Meeting', 'Board Meeting', 'Client Meeting', 'Team Meeting'],
+};
 
-    const [formData, setFormData] = useState({
-        location: '',
-        date: '',
-        venuePreference: '',
-        customizationType: '',
-        side: '', // Bride or Groom
-        guestCount: '',
-        budget: ''
-    });
+const CATEGORY_HEADINGS: Record<string, { title: string; sub: string }> = {
+    wedding: { title: 'Plan Your Wedding Event', sub: 'Provide details to begin planning your celebration.' },
+    events: { title: 'Plan Your Event', sub: 'Share the details so we can start building your experience.' },
+    conferences: { title: 'Organise Your Conference', sub: 'Tell us what you need and we will take it from there.' },
+    meetings: { title: 'Schedule Your Meeting', sub: 'Provide the specifics to arrange the ideal session.' },
+};
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+const DEFAULT_H = { title: 'Plan Your Event', sub: 'Provide details to begin planning.' };
+
+const GUEST_RANGES = ['50 – 100', '100 – 300', '300 – 600', '600+'];
+const ROOM_RANGES = ['5 – 10', '10 – 20', '20 – 50', '50+'];
+const WHO_OPTIONS = ['Bride Side', 'Groom Side', 'Both Families'];
+const THEME_OPTIONS = [
+    'Ethnic Traditional', 'Rajasthani Royal', 'Mughal Theme',
+    'South Indian Temple Style', 'Western Classic', 'Boho Chic',
+    'Minimal Elegant', 'Luxury Palace', 'Bollywood Glam', 'Pastel Floral',
+];
+const DESTINATION_OPTIONS = [
+    'Beach Wedding', 'Mountain Retreat', 'Palace / Heritage Venue',
+    'Destination Abroad', 'Luxury Resort', 'Garden Wedding',
+    'Temple Wedding', 'Banquet Hall',
+];
+
+const BUDGET_MIDPOINTS: Record<string, number> = {
+    '50k-1L': 75000, '1L-3L': 200000, '3L-5L': 400000, '5L+': 600000,
+};
+const GUEST_MIDPOINTS: Record<string, number> = {
+    '50 – 100': 75, '100 – 300': 200, '300 – 600': 450, '600+': 700,
+};
+
+function budgetPerGuest(budget: string, guests: string): string | null {
+    const b = BUDGET_MIDPOINTS[budget];
+    const g = GUEST_MIDPOINTS[guests];
+    if (!b || !g) return null;
+    return `₹${Math.round(b / g).toLocaleString('en-IN')}`;
+}
+
+function normalise(cat: string): string {
+    const m: Record<string, string> = {
+        wedding: 'wedding', weddings: 'wedding',
+        event: 'events', events: 'events',
+        conference: 'conferences', conferences: 'conferences',
+        meeting: 'meetings', meetings: 'meetings',
     };
+    return m[cat] ?? cat;
+}
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log("Host Requirements Captured:", formData);
-        
-        // TODO: In the future, you can save this data to context/state here 
-        // to filter the vendors on the next page.
-        
-        // Push the user to the marketplace to see their recommendations
-        navigate(`/host/marketplace/${category || 'wedding'}`);
-    };
+// ── MULTI-SELECT ─────────────────────────────────────────────────────────────
+interface MSProps { options: string[]; selected: string[]; onChange: (v: string[]) => void; placeholder?: string; error?: boolean; }
+
+const MultiSelect = ({ options, selected, onChange, placeholder = 'Select…', error }: MSProps) => {
+    const [open, setOpen] = useState(false);
+    const [q, setQ] = useState('');
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const fn = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) { setOpen(false); setQ(''); } };
+        document.addEventListener('mousedown', fn);
+        return () => document.removeEventListener('mousedown', fn);
+    }, []);
+
+    const filtered = options.filter(o => o.toLowerCase().includes(q.toLowerCase()));
+    const toggle = (o: string) => onChange(selected.includes(o) ? selected.filter(s => s !== o) : [...selected, o]);
+    const remove = (o: string, e: React.MouseEvent) => { e.stopPropagation(); onChange(selected.filter(s => s !== o)); };
 
     return (
-        <div className="questionnaire-container">
-            <div className="questionnaire-card">
-                <div className="questionnaire-header">
-                    <h2>Tell us about your event</h2>
-                    <p>We'll use these details to recommend the perfect vendors for your {category || 'event'}.</p>
+        <div className={`ef-ms ${error ? 'ef-ms--err' : ''}`} ref={ref}>
+            <div className={`ef-ms-box ${open ? 'ef-ms-box--open' : ''}`} onClick={() => setOpen(v => !v)}>
+                <div className="ef-ms-tags">
+                    {selected.length === 0 ? <span className="ef-ms-ph">{placeholder}</span> : null}
+                    {selected.map(s => (
+                        <span key={s} className="ef-ms-tag">
+                            {s}
+                            <button type="button" onClick={e => remove(s, e)} aria-label={`Remove ${s}`}><X size={10} /></button>
+                        </span>
+                    ))}
                 </div>
-
-                <form onSubmit={handleSubmit} className="questionnaire-form">
-                    <div className="form-grid">
-                        {/* Location */}
-                        <div className="input-group">
-                            <label><MapPin size={16}/> City / Location</label>
-                            <input 
-                                type="text" 
-                                name="location" 
-                                placeholder="e.g., New York, NY" 
-                                value={formData.location} 
-                                onChange={handleChange} 
-                                required 
-                            />
-                        </div>
-
-                        {/* Date */}
-                        <div className="input-group">
-                            <label><Calendar size={16}/> Event Date</label>
-                            <input 
-                                type="date" 
-                                name="date" 
-                                value={formData.date} 
-                                onChange={handleChange} 
-                                required 
-                            />
-                        </div>
-
-                        {/* Venue Preference */}
-                        <div className="input-group">
-                            <label><Building size={16}/> Venue Preference</label>
-                            <select name="venuePreference" value={formData.venuePreference} onChange={handleChange} required>
-                                <option value="" disabled>Select a venue type...</option>
-                                <option value="indoor">Indoor Banquet</option>
-                                <option value="outdoor">Outdoor / Garden</option>
-                                <option value="beach">Beachfront</option>
-                                <option value="resort">Luxury Resort</option>
-                                <option value="undecided">Not sure yet</option>
-                            </select>
-                        </div>
-
-                        {/* Number of People */}
-                        <div className="input-group">
-                            <label><Users size={16}/> Estimated Guest Count</label>
-                            <input 
-                                type="number" 
-                                name="guestCount" 
-                                placeholder="e.g., 150" 
-                                min="1"
-                                value={formData.guestCount} 
-                                onChange={handleChange} 
-                                required 
-                            />
-                        </div>
-
-                        {/* Customization Type */}
-                        <div className="input-group">
-                            <label><Sparkles size={16}/> Level of Customization</label>
-                            <select name="customizationType" value={formData.customizationType} onChange={handleChange} required>
-                                <option value="" disabled>Select customization level...</option>
-                                <option value="basic">Basic (Standard Packages)</option>
-                                <option value="moderate">Moderate (Some personalized elements)</option>
-                                <option value="premium">Premium (Highly tailored experience)</option>
-                                <option value="full">Full Custom (End-to-end bespoke design)</option>
-                            </select>
-                        </div>
-
-                        {/* Budget */}
-                        <div className="input-group">
-                            <label><DollarSign size={16}/> Total Budget Estimate</label>
-                            <select name="budget" value={formData.budget} onChange={handleChange} required>
-                                <option value="" disabled>Select your budget range...</option>
-                                <option value="low">Under $10,000</option>
-                                <option value="medium">$10,000 - $30,000</option>
-                                <option value="high">$30,000 - $75,000</option>
-                                <option value="luxury">$75,000+</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    {/* Conditional Field: Only show Bride/Groom if category is Wedding */}
-                    {(!category || category === 'wedding') && (
-                        <div className="input-group full-width mt-3">
-                            <label><Heart size={16}/> Which side are you hosting for?</label>
-                            <div className="radio-group">
-                                <label className="radio-label">
-                                    <input type="radio" name="side" value="bride" onChange={handleChange} required />
-                                    Bride's Side
-                                </label>
-                                <label className="radio-label">
-                                    <input type="radio" name="side" value="groom" onChange={handleChange} required />
-                                    Groom's Side
-                                </label>
-                                <label className="radio-label">
-                                    <input type="radio" name="side" value="both" onChange={handleChange} required />
-                                    Both
-                                </label>
-                            </div>
-                        </div>
-                    )}
-
-                    <button type="submit" className="btn-submit mt-4">
-                        Find My Vendors
-                    </button>
-                </form>
+                <ChevronDown size={14} className={`ef-ms-chevron ${open ? 'ef-ms-chevron--open' : ''}`} />
             </div>
-
-            {/* Embedded Styles for the Questionnaire */}
-            <style>{`
-                .questionnaire-container {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    min-height: calc(100vh - 80px);
-                    background-color: var(--background-light, #f9fafb);
-                    padding: 3rem 1rem;
-                }
-                .questionnaire-card {
-                    background: white;
-                    max-width: 800px;
-                    width: 100%;
-                    border-radius: 12px;
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-                    padding: 3rem;
-                    border: 1px solid var(--border-color, #e5e7eb);
-                }
-                .questionnaire-header {
-                    text-align: center;
-                    margin-bottom: 3rem;
-                }
-                .questionnaire-header h2 {
-                    font-size: 2rem;
-                    color: var(--text-primary);
-                    margin-bottom: 0.5rem;
-                    font-family: var(--font-family-serif, serif);
-                }
-                .questionnaire-header p { color: var(--text-secondary); }
-                
-                .form-grid {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    gap: 1.5rem;
-                }
-                .input-group {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0.5rem;
-                }
-                .input-group.full-width { grid-column: 1 / -1; }
-                .input-group label {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                    font-size: 0.9rem;
-                    font-weight: 600;
-                    color: var(--text-primary);
-                }
-                .input-group input[type="text"], 
-                .input-group input[type="date"], 
-                .input-group input[type="number"], 
-                .input-group select {
-                    width: 100%;
-                    padding: 0.75rem 1rem;
-                    border: 1px solid var(--border-color, #d1d5db);
-                    border-radius: 6px;
-                    font-size: 0.95rem;
-                    background-color: #fff;
-                    outline: none;
-                    transition: all 0.2s;
-                }
-                .input-group input:focus, .input-group select:focus {
-                    border-color: var(--primary-color, #c5a572);
-                    box-shadow: 0 0 0 3px rgba(197, 165, 114, 0.1);
-                }
-                
-                .radio-group {
-                    display: flex;
-                    gap: 2rem;
-                    margin-top: 0.5rem;
-                }
-                .radio-label {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                    font-size: 0.95rem;
-                    cursor: pointer;
-                }
-                .btn-submit {
-                    width: 100%;
-                    padding: 1rem;
-                    background-color: var(--primary-color, #c5a572);
-                    color: white;
-                    border: none;
-                    border-radius: 6px;
-                    font-size: 1.1rem;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: background-color 0.2s;
-                }
-                .btn-submit:hover { background-color: #b08d55; }
-                .mt-3 { margin-top: 1.5rem; }
-                .mt-4 { margin-top: 2.5rem; }
-
-                @media (max-width: 768px) {
-                    .form-grid { grid-template-columns: 1fr; }
-                    .questionnaire-card { padding: 2rem 1.5rem; }
-                    .radio-group { flex-direction: column; gap: 1rem; }
-                }
-            `}</style>
+            {open && (
+                <div className="ef-ms-drop">
+                    <input className="ef-ms-search" type="text" placeholder="Search…" value={q}
+                        onChange={e => setQ(e.target.value)} onClick={e => e.stopPropagation()} autoFocus />
+                    <ul role="listbox" aria-multiselectable="true">
+                        {filtered.length === 0 && <li className="ef-ms-empty">No results</li>}
+                        {filtered.map(opt => {
+                            const sel = selected.includes(opt);
+                            return (
+                                <li key={opt} role="option" aria-selected={sel}
+                                    className={`ef-ms-opt ${sel ? 'ef-ms-opt--sel' : ''}`}
+                                    onClick={() => toggle(opt)}>
+                                    <span className={`ef-ms-cb ${sel ? 'ef-ms-cb--on' : ''}`}>
+                                        {sel && <Check size={9} strokeWidth={3} />}
+                                    </span>
+                                    {opt}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </div>
+            )}
         </div>
     );
 };
 
-export default HostQuestionnaire;
+// ── FIELD WRAPPER ────────────────────────────────────────────────────────────
+const Field = ({ label, required, children, error, hint }: {
+    label: string; required?: boolean; children: React.ReactNode; error?: string; hint?: string;
+}) => (
+    <div className="ef-field">
+        <label className="ef-label">{label}{required && <span aria-hidden="true"> *</span>}</label>
+        {children}
+        {hint && <span className="ef-hint">{hint}</span>}
+        {error && <span className="ef-err" role="alert">{error}</span>}
+    </div>
+);
+
+// ── NATIVE SELECT ────────────────────────────────────────────────────────────
+const Select = ({ id, value, onChange, children, error }: {
+    id?: string; value: string; onChange: (v: string) => void; children: React.ReactNode; error?: boolean;
+}) => (
+    <div className="ef-sel-wrap">
+        <select id={id} className={`ef-sel ${error ? 'ef-sel--err' : ''}`}
+            value={value} onChange={e => onChange(e.target.value)}>
+            {children}
+        </select>
+        <ChevronDown size={14} className="ef-sel-icon" />
+    </div>
+);
+
+// ── MAIN PAGE ────────────────────────────────────────────────────────────────
+type Pkg = 'custom' | 'designed' | null;
+
+const HostEventForm = () => {
+    const navigate = useNavigate();
+    const [sp] = useSearchParams();
+    const cat = normalise((sp.get('category') || '').toLowerCase());
+    const isWedding = cat === 'wedding';
+    const heading = CATEGORY_HEADINGS[cat] ?? DEFAULT_H;
+    const typeOptions = EVENT_TYPES[cat] ?? EVENT_TYPES['wedding'];
+
+    // Core fields
+    const [types, setTypes] = useState<string[]>([]);
+    const [location, setLocation] = useState('');
+    const [budget, setBudget] = useState('');
+    const [start, setStart] = useState('');
+    const [end, setEnd] = useState('');
+    const [pkg, setPkg] = useState<Pkg>(null);
+
+    // Wedding fields
+    const [guests, setGuests] = useState('');
+    const [rooms, setRooms] = useState('');
+    const [who, setWho] = useState('');
+    const [themes, setThemes] = useState<string[]>([]);
+    const [dest, setDest] = useState('');
+
+    // Validation
+    const [tried, setTried] = useState(false);
+    const [dateErr, setDateErr] = useState('');
+    const today = new Date().toISOString().split('T')[0];
+
+    useEffect(() => { setTypes([]); setGuests(''); setRooms(''); setWho(''); setThemes([]); setDest(''); setTried(false); }, [cat]);
+    useEffect(() => { setDateErr(start && end && end < start ? 'End date cannot be before start date.' : ''); }, [start, end]);
+
+    const weddingOk = !isWedding || Boolean(guests && rooms && who && themes.length > 0 && dest);
+    const valid = Boolean(types.length > 0 && location.trim() && budget && start && end && !dateErr && pkg && weddingOk);
+
+    const submit = () => {
+        setTried(true);
+        if (!valid) return;
+        navigate(pkg === 'custom' ? '/host/customize' : `/host/marketplace/${cat}`);
+    };
+
+    const perGuest = budgetPerGuest(budget, guests);
+
+    return (
+        <div className="ef-page">
+            <div className="ef-container">
+
+                {/* Header */}
+                <header className="ef-head">
+                    {cat && <p className="ef-cat">{cat.charAt(0).toUpperCase() + cat.slice(1)}</p>}
+                    <h1 className="ef-h1">{heading.title}</h1>
+                    <p className="ef-sub">{heading.sub}</p>
+                </header>
+
+                {/* Form card */}
+                <div className="ef-card">
+
+                    {/* ── Event Type ── */}
+                    <Field label="Event Type" required error={tried && types.length === 0 ? 'Select at least one type.' : undefined}>
+                        <MultiSelect options={typeOptions} selected={types}
+                            onChange={v => setTypes(v)}
+                            placeholder={`Select ${cat || 'event'} types…`}
+                            error={tried && types.length === 0} />
+                    </Field>
+
+                    {/* ── Location + Budget ── */}
+                    <div className="ef-row">
+                        <Field label="Location" required>
+                            <input className="ef-input" type="text" placeholder="City or venue"
+                                value={location} onChange={e => setLocation(e.target.value)} />
+                        </Field>
+                        <Field label="Budget" required>
+                            <Select value={budget} onChange={setBudget}>
+                                <option value="">Select range…</option>
+                                <option value="50k-1L">₹50,000 – ₹1,00,000</option>
+                                <option value="1L-3L">₹1,00,000 – ₹3,00,000</option>
+                                <option value="3L-5L">₹3,00,000 – ₹5,00,000</option>
+                                <option value="5L+">₹5,00,000+</option>
+                            </Select>
+                        </Field>
+                    </div>
+
+                    {/* ── Dates ── */}
+                    <div className="ef-row">
+                        <Field label="Start Date" required>
+                            <input className="ef-input" type="date" min={today}
+                                value={start} onChange={e => setStart(e.target.value)} />
+                        </Field>
+                        <Field label="End Date" required error={dateErr || undefined}>
+                            <input className={`ef-input ${dateErr ? 'ef-input--err' : ''}`} type="date"
+                                min={start || today} value={end} onChange={e => setEnd(e.target.value)} />
+                        </Field>
+                    </div>
+
+                    {/* ── Wedding-only fields ── */}
+                    {isWedding && (
+                        <>
+                            {/* Guests + Rooms */}
+                            <div className="ef-row">
+                                <Field label="Number of Guests" required hint="Estimated total attending"
+                                    error={tried && !guests ? 'Required.' : undefined}>
+                                    <Select value={guests} onChange={setGuests} error={tried && !guests}>
+                                        <option value="">Select range…</option>
+                                        {GUEST_RANGES.map(r => <option key={r} value={r}>{r} guests</option>)}
+                                    </Select>
+                                    {perGuest && <p className="ef-per-guest">Approx. {perGuest} per guest</p>}
+                                </Field>
+                                <Field label="Rooms Required" required hint="For guest accommodation"
+                                    error={tried && !rooms ? 'Required.' : undefined}>
+                                    <Select value={rooms} onChange={setRooms} error={tried && !rooms}>
+                                        <option value="">Select range…</option>
+                                        {ROOM_RANGES.map(r => <option key={r} value={r}>{r} rooms</option>)}
+                                    </Select>
+                                </Field>
+                            </div>
+
+                            {/* Who is it for */}
+                            <Field label="Who is the event for?" required
+                                error={tried && !who ? 'Required.' : undefined}>
+                                <div className="ef-pills">
+                                    {WHO_OPTIONS.map(opt => (
+                                        <button key={opt} type="button"
+                                            className={`ef-pill ${who === opt ? 'ef-pill--on' : ''}`}
+                                            onClick={() => setWho(opt)}>
+                                            {opt}
+                                        </button>
+                                    ))}
+                                </div>
+                            </Field>
+
+                            {/* Theme / Customisation */}
+                            <Field label="Theme / Customisation Style" required
+                                error={tried && themes.length === 0 ? 'Select at least one.' : undefined}>
+                                <div className="ef-chips">
+                                    {THEME_OPTIONS.map(t => (
+                                        <button key={t} type="button"
+                                            className={`ef-chip ${themes.includes(t) ? 'ef-chip--on' : ''}`}
+                                            onClick={() => setThemes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])}>
+                                            {t}
+                                        </button>
+                                    ))}
+                                </div>
+                            </Field>
+
+                            {/* Destination Preference */}
+                            <Field label="Preferred Destination Type" required
+                                error={tried && !dest ? 'Required.' : undefined}>
+                                <div className="ef-dest">
+                                    {DESTINATION_OPTIONS.map(d => (
+                                        <button key={d} type="button"
+                                            className={`ef-dest-btn ${dest === d ? 'ef-dest-btn--on' : ''}`}
+                                            onClick={() => setDest(d)}>
+                                            {d}
+                                        </button>
+                                    ))}
+                                </div>
+                            </Field>
+                        </>
+                    )}
+
+                    {/* ── Package Selection ── */}
+                    <div className="ef-divider-line" />
+
+                    <Field label="How would you like to plan?">
+                        <div className="ef-row">
+                            <button type="button"
+                                className={`ef-pkg ${pkg === 'custom' ? 'ef-pkg--on' : ''}`}
+                                onClick={() => setPkg('custom')} aria-pressed={pkg === 'custom'}>
+                                <strong>Build Custom Package</strong>
+                                <span>Choose vendors and services individually.</span>
+                            </button>
+                            <button type="button"
+                                className={`ef-pkg ${pkg === 'designed' ? 'ef-pkg--on' : ''}`}
+                                onClick={() => setPkg('designed')} aria-pressed={pkg === 'designed'}>
+                                <strong>Choose Designed Package</strong>
+                                <span>Select from curated packages by our team.</span>
+                            </button>
+                        </div>
+                        {tried && !pkg && <span className="ef-err" role="alert">Please choose a planning option.</span>}
+                    </Field>
+
+                    {/* ── Submit ── */}
+                    <div className="ef-submit-row">
+                        <button className={`ef-submit ${valid ? 'ef-submit--on' : ''}`} onClick={submit}>
+                            Continue
+                        </button>
+                        {tried && !valid && <p className="ef-submit-hint">Please complete all required fields above.</p>}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default HostEventForm;
